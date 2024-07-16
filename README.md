@@ -15,6 +15,16 @@ Built with Next.js and TypeScript, it offers a unique user experience with a ter
 - **Folder/File Display**: A file explorer-like UI to browse through content.
 - **Additional Pages**: Includes pages for contact, projects, and skills.
 
+## Upcoming Features
+- **Anki/Flashcards**: Review past/studied concepts and track progress.
+- **Habit Tracker**: Don't-break-the-chain style habit tracker to aid goal adherence.
+- **Pomodoro Timer**: Lock-in for fifteen to twenty minutes.
+
+## Upcoming Improvements
+- **Multiple Wallpapers**: Select from an assortment of wallpapers, CSS generated.
+- **Multiple Playlists**: Select from an assortment of playlists to suit the mood.
+
+
 ## Tech Stack
 
 - Next.js
