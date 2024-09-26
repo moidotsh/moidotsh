@@ -9,7 +9,6 @@ export default function HomePage({}: Props) {
   const [kirbyFrame, setKirbyFrame] = useState(0);
   const [kirbyPosition, setKirbyPosition] = useState(10);
   const [direction, setDirection] = useState(-1);
-  const [dots, setDots] = useState(".");
 
   const messageEmojiPairs = [
     { message: "Let's Build Together!", emoji: "🚀" },
@@ -21,6 +20,8 @@ export default function HomePage({}: Props) {
     { message: "System Tinkerer", emoji: "🛠️" },
     { message: "Multi-disciplinary", emoji: "🌈" },
     { message: "Vim + LaTeX", emoji: "✍️" },
+    { message: "BunJS", emoji: "🍞"},
+    { message: "Typescript", emoji: "👨🏽‍💻"}
   ];
 
   const kirbyFrames = [

@@ -24,8 +24,6 @@ const MountainContainer = ({ setMountainDetails, colorGroup, className }: Mounta
     { id: Date.now() + 3 }
   ];
 
-  const [mountains, setMountains] = useState(initialMountains);
-
   return (
     <div className={'relative ' + className}>
       {isMounted && <MountainBackground colorGroup={colorGroup} setMountainDetails={setMountainDetails} />}

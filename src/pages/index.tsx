@@ -23,6 +23,8 @@ function IndexPage(props: IndexPageProps, ref: IndexPageRef) {
         <MiddleBot />
         <Bot />
       </div>
+      <Analytics />
+
     </PageTransition>
   );
 }
