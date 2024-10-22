@@ -1,8 +1,6 @@
 //_app.tsx
 import AppDock from "@/components/AppDock";
 import BrowserApp from "@/components/BrowserApp";
-import FurthestLayer from "@/components/FurthestLayer";
-import MiddleTop from "@/components/MiddleTop";
 import MusicApp from "@/components/MusicApp";
 import NavApp from "@/components/NavApp";
 import TerminalApp from "@/components/TerminalApp";
@@ -17,7 +15,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className="overflow-hidden h-screen w-screen">
-
       <NavApp />
       <TerminalApp />
       <MusicApp />

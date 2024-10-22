@@ -2,6 +2,7 @@
 
 import PageTransition from "@/components/PageTransition";
 import { forwardRef } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import FurthestLayer from "@/components/FurthestLayer";
 import MiddleTop from "@/components/MiddleTop";
 import MiddleBot from "@/components/MiddleBot";
@@ -11,10 +12,6 @@ type IndexPageProps = {};
 type IndexPageRef = React.ForwardedRef<HTMLDivElement>;
 
 function IndexPage(props: IndexPageProps, ref: IndexPageRef) {
-
-
-
-
   return (
     <PageTransition ref={ref}>
       <div className="page1 overflow-hidden">
@@ -24,7 +21,6 @@ function IndexPage(props: IndexPageProps, ref: IndexPageRef) {
         <Bot />
       </div>
       <Analytics />
-
     </PageTransition>
   );
 }
