@@ -42,7 +42,7 @@ const withAppTemplate = <P extends object>(
     useEffect(() => {
       // Set the random Y value to a range of 0 to 50% of the viewport height
       const randomY = Math.random() * (window.innerHeight * 0.5); // Random Y between 0 and 50% of viewport height
-      const randomX = Math.random() * (window.innerWidth - 200); // Keep random X to prevent stacking horizontally (200 is approx width of the app)
+      const randomX = Math.random() * (window.innerWidth - 280); // Keep random X to prevent stacking horizontally (200 is approx width of the app)
 
       setCurrentPosition({ x: randomX, y: randomY });
     }, []);
