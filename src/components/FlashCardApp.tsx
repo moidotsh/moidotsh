@@ -3,8 +3,8 @@ import withAppTemplate from "./withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
 import {
   flashcardCategories,
-  MathCategory,
-  ComputerScienceCategory,
+  MathCategory, // Corrected import
+  ComputerScienceCategory, // Corrected import
 } from "@/assets/flashcards/flashcardsCategories";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes"; // Import Flashcard type
 import CategorySelector from "./CategorySelector";
