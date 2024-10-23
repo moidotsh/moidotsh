@@ -1,3 +1,5 @@
+// flashcardCategories.ts
+
 import { algebraFlashcards } from "./algebraFlashcards";
 import { precalculusFlashcards } from "./precalculusFlashcards";
 import { calculusFlashcards } from "./calculusFlashcards";

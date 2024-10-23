@@ -1,6 +1,7 @@
 // FlashCardDisplay.tsx
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "react-feather";
+import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 import { flashcardCategories } from "@/assets/flashcards/flashcardCategories";
 
 type Props = {

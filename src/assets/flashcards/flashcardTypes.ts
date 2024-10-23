@@ -1,3 +1,5 @@
+// flashcardTypes.ts
+
 export type Flashcard = {
   id: string; // Unique identifier for each flashcard
   front: string;

@@ -1,3 +1,4 @@
+// FlashCardApp.tsx
 import React, { useState } from "react";
 import withAppTemplate from "./withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
