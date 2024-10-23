@@ -5,7 +5,7 @@ import {
   flashcardCategories,
   MathCategory, // Corrected import
   ComputerScienceCategory, // Corrected import
-} from "@/assets/flashcards/flashcardsCategories";
+} from "@/assets/flashcards/flashcardCategories";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes"; // Import Flashcard type
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
