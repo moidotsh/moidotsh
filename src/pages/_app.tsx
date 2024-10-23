@@ -1,6 +1,7 @@
 //_app.tsx
 import AppDock from "@/components/AppDock";
 import BrowserApp from "@/components/BrowserApp";
+import FlashCardApp from "@/components/FlashCardApp";
 import MusicApp from "@/components/MusicApp";
 import NavApp from "@/components/NavApp";
 import TerminalApp from "@/components/TerminalApp";
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <MusicApp />
       <AppDock />
       <BrowserApp />
+      <FlashCardApp />
 
       <AnimatePresence
         onExitComplete={onExitComplete}

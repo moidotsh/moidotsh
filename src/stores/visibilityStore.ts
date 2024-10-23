@@ -25,6 +25,9 @@ type VisibilityState = {
 
   browserLoading: boolean;
   setBrowserLoading: (loading: boolean) => void;
+
+  flashcardsVisible: boolean; // State for flashcards visibility
+  toggleFlashcards: () => void; // Function to toggle flashcards
 };
 
 export const useVisibilityStore = create<VisibilityState>((set) => ({
@@ -60,4 +63,9 @@ export const useVisibilityStore = create<VisibilityState>((set) => ({
   setBrowserTitle: (title: string) => set({ browserTitle: title }),
   browserLoading: false,
   setBrowserLoading: (loading: boolean) => set({ browserLoading: loading }),
+
+  // Flashcards app
+  flashcardsVisible: false,
+  toggleFlashcards: () =>
+    set((state) => ({ flashcardsVisible: !state.flashcardsVisible })),
 }));
