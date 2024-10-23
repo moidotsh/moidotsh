@@ -156,6 +156,6 @@ const FlashcardApp = () => {
 export default withAppTemplate(
   FlashcardApp,
   "Flashcards",
-  () => "Flashcards",
+  () => <h1>Flashcards</h1>,
   true,
 );
