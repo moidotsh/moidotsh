@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import withAppTemplate from "./withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
-import {
-  flashcardCategories,
-  Flashcard,
-} from "@/assets/flashcards/flashcardsCategories";
+import { flashcardCategories } from "@/assets/flashcards/flashcardsCategories";
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
 import FlashcardDisplay from "./FlashCardDisplay";
