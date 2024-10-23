@@ -1,13 +1,15 @@
 // FlashCardApp.tsx
-
 import React, { useState } from "react";
 import withAppTemplate from "./withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
 import { flashcardCategories } from "@/assets/flashcards/flashcardsCategories";
-import { Flashcard } from "@/assets/flashcards/flashcardTypes";
+import { Flashcard } from "@/assets/flashcards/flashcardTypes"; // Import Flashcard type
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
 import FlashcardDisplay from "./FlashCardDisplay";
+
+// Define valid categories as the keys of flashcardCategories
+type CategoryKey = keyof typeof flashcardCategories;
 
 // Helper function to shuffle the flashcards array, ensuring cards with neverDisplayFirst don't appear first
 const shuffleArray = (array: Flashcard[]) => {
@@ -36,16 +38,18 @@ const shuffleArray = (array: Flashcard[]) => {
 };
 
 const FlashcardApp = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryKey | null>(
+    null,
+  ); // Ensure selectedCategory matches CategoryKey type
   const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [index, setIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [completedChains, setCompletedChains] = useState<string[]>([]); // Tracks completed chains to ensure valid display
 
-  const categories = Object.keys(flashcardCategories);
+  const categories = Object.keys(flashcardCategories) as CategoryKey[]; // Cast keys to CategoryKey[]
   const folders = selectedCategory
-    ? Object.keys(flashcardCategories[selectedCategory])
+    ? Object.keys(flashcardCategories[selectedCategory]) // Type-safe access to category folders
     : [];
 
   const setTitle = useVisibilityStore((state) => state.setBrowserTitle);
@@ -66,8 +70,9 @@ const FlashcardApp = () => {
   };
 
   const startFlashcards = () => {
+    if (!selectedCategory) return; // Ensure a category is selected
     const selectedFlashcards: Flashcard[] = selectedFolders.flatMap(
-      (folderName) => flashcardCategories[selectedCategory!][folderName],
+      (folderName) => flashcardCategories[selectedCategory][folderName],
     );
     setFlashcards(shuffleArray(selectedFlashcards));
     setIndex(0);
