@@ -1,21 +1,19 @@
-// FlashCardApp.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import withAppTemplate from "./withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
 import {
   flashcardCategories,
-  MathCategory, // Corrected import
-  ComputerScienceCategory, // Corrected import
+  MathCategory,
+  ComputerScienceCategory,
 } from "@/assets/flashcards/flashcardCategories";
-import { Flashcard } from "@/assets/flashcards/flashcardTypes"; // Import Flashcard type
+import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
 import FlashcardDisplay from "./FlashCardDisplay";
 
-// Helper function to shuffle the flashcards array, ensuring cards with neverDisplayFirst don't appear first
-const shuffleArray = (array: Flashcard[]) => {
+// Helper function to shuffle the flashcards array
+const shuffleArray = (array: Flashcard[]): Flashcard[] => {
   const allowedFirstCards = array.filter((card) => !card.neverDisplayFirst);
-
   const firstCard =
     allowedFirstCards.length > 0
       ? allowedFirstCards[Math.floor(Math.random() * allowedFirstCards.length)]
@@ -23,14 +21,34 @@ const shuffleArray = (array: Flashcard[]) => {
 
   const restCards = array
     .filter((card) => card.id !== firstCard.id)
-    .map((card) => ({ ...card, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map((card) => {
-      const { sort, ...rest } = card;
-      return rest;
-    });
+    .sort(() => Math.random() - 0.5);
 
   return [firstCard, ...restCards];
+};
+
+// Helper function to get flashcards based on selected category and folders
+const getSelectedFlashcards = (
+  selectedCategory: string,
+  selectedFolders: string[],
+): Flashcard[] => {
+  let selectedFlashcards: Flashcard[] = [];
+
+  if (selectedCategory === "Math") {
+    selectedFlashcards = selectedFolders.flatMap(
+      (folderName) =>
+        (flashcardCategories.Math as MathCategory)[
+          folderName as keyof MathCategory
+        ] || [],
+    );
+  } else if (selectedCategory === "Computer Science") {
+    selectedFlashcards = selectedFolders.flatMap(
+      (folderName) =>
+        (flashcardCategories["Computer Science"] as ComputerScienceCategory)[
+          folderName as keyof ComputerScienceCategory
+        ] || [],
+    );
+  }
+  return selectedFlashcards;
 };
 
 const FlashcardApp = () => {
@@ -39,7 +57,8 @@ const FlashcardApp = () => {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [index, setIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [completedChains, setCompletedChains] = useState<string[]>([]);
+  const [completedChains, setCompletedChains] = useState<string[]>([]); // Track completed root cards
+  const [currentRoot, setCurrentRoot] = useState<string | null>(null); // Track the current chain root
 
   const categories = Object.keys(flashcardCategories);
   const folders = selectedCategory
@@ -51,13 +70,27 @@ const FlashcardApp = () => {
     : [];
 
   const setTitle = useVisibilityStore((state) => state.setBrowserTitle);
-  setTitle(
-    flashcards.length > 0
-      ? flashcards[index]?.front || "Flashcards"
-      : selectedCategory
-        ? "Choose your folder(s)"
-        : "Choose a Category",
-  );
+
+  // Dynamically update the title with category, chapter, unit, and step progression
+  useEffect(() => {
+    if (flashcards.length > 0) {
+      const currentCard = flashcards[index];
+      let baseTitle = `${selectedCategory || "Flashcards"} - Chapter ${
+        currentCard.chapter
+      }, Unit ${currentCard.unit}`;
+
+      // Include step number if it's part of a multi-step process
+      if (currentCard.totalSteps && currentCard.stepNumber) {
+        baseTitle += ` (${currentCard.stepNumber}/${currentCard.totalSteps})`;
+      }
+
+      setTitle(baseTitle);
+    } else {
+      setTitle(
+        selectedCategory ? "Choose your folder(s)" : "Choose a Category",
+      );
+    }
+  }, [flashcards, index, selectedCategory, setTitle]);
 
   const toggleFolderSelection = (folderName: string) => {
     setSelectedFolders((prev) =>
@@ -70,57 +103,56 @@ const FlashcardApp = () => {
   const startFlashcards = () => {
     if (!selectedCategory) return;
 
-    let selectedFlashcards: Flashcard[] = [];
-
-    if (selectedCategory === "Math") {
-      selectedFlashcards = selectedFolders.flatMap(
-        (folderName) =>
-          (flashcardCategories.Math as MathCategory)[
-            folderName as keyof MathCategory
-          ] || [],
-      );
-    } else if (selectedCategory === "Computer Science") {
-      selectedFlashcards = selectedFolders.flatMap(
-        (folderName) =>
-          (flashcardCategories["Computer Science"] as ComputerScienceCategory)[
-            folderName as keyof ComputerScienceCategory
-          ] || [],
-      );
-    }
-
+    const selectedFlashcards = getSelectedFlashcards(
+      selectedCategory,
+      selectedFolders,
+    );
     setFlashcards(shuffleArray(selectedFlashcards));
     setIndex(0);
   };
 
+  // Handle the chain by following the `nextQuestionId`
   const handleNext = (nextQuestionId?: string) => {
     if (nextQuestionId) {
       const nextIndex = flashcards.findIndex(
         (card) => card.id === nextQuestionId,
       );
       if (nextIndex !== -1) {
-        setCompletedChains((prev) => [...prev, flashcards[index].id]);
         setIndex(nextIndex);
       }
     } else {
       let nextIndex = index + 1;
+
+      // Skip over any cards that have `neverDisplayFirst` and ensure we avoid completed chains
       while (
         nextIndex < flashcards.length &&
-        flashcards[nextIndex].neverDisplayFirst &&
-        !completedChains.includes(flashcards[nextIndex].id)
+        (flashcards[nextIndex].neverDisplayFirst ||
+          completedChains.includes(flashcards[nextIndex].id))
       ) {
         nextIndex++;
       }
+
+      // If the current root card was part of a chain and it completes, add it to completedChains
+      if (currentRoot && !flashcards[nextIndex]?.nextQuestionId) {
+        setCompletedChains((prev) => [...prev, currentRoot]);
+      }
+
       if (nextIndex >= flashcards.length) {
         nextIndex = 0;
       }
+
+      setCurrentRoot(
+        flashcards[nextIndex].nextQuestionId ? flashcards[nextIndex].id : null,
+      );
+
       setIndex(nextIndex);
     }
-    setIsFlipped(false);
+    setIsFlipped(false); // Reset flip state when moving to the next card
   };
 
   const handlePrevious = () => {
     setIndex(index === 0 ? flashcards.length - 1 : index - 1);
-    setIsFlipped(false);
+    setIsFlipped(false); // Reset flip state when moving to the previous card
   };
 
   if (flashcards.length === 0) {
