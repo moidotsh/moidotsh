@@ -1,7 +1,10 @@
+// FlashCardApp.tsx
+
 import React, { useState } from "react";
 import withAppTemplate from "./withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
 import { flashcardCategories } from "@/assets/flashcards/flashcardsCategories";
+import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
 import FlashcardDisplay from "./FlashCardDisplay";
