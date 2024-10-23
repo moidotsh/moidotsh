@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import withAppTemplate from "./withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
-import {
-  flashcardCategories,
-  MathCategories,
-  ComputerScienceCategories,
-} from "@/assets/flashcards/flashcardsCategories";
+import { flashcardCategories } from "@/assets/flashcards/flashcardsCategories"; // No extra imports needed now
 import { Flashcard } from "@/assets/flashcards/flashcardTypes"; // Import Flashcard type
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
@@ -69,21 +65,12 @@ const FlashcardApp = () => {
   const startFlashcards = () => {
     if (!selectedCategory) return;
 
-    let selectedFlashcards: Flashcard[] = [];
-
-    if (selectedCategory in flashcardCategories.Math) {
-      selectedFlashcards = selectedFolders.flatMap(
-        (folderName) =>
-          flashcardCategories.Math[folderName as keyof MathCategories] || [],
-      );
-    } else if (selectedCategory in flashcardCategories["Computer Science"]) {
-      selectedFlashcards = selectedFolders.flatMap(
-        (folderName) =>
-          flashcardCategories["Computer Science"][
-            folderName as keyof ComputerScienceCategories
-          ] || [],
-      );
-    }
+    const selectedFlashcards: Flashcard[] = selectedFolders.flatMap(
+      (folderName) =>
+        flashcardCategories[
+          selectedCategory as keyof typeof flashcardCategories
+        ][folderName] || [],
+    );
 
     setFlashcards(shuffleArray(selectedFlashcards));
     setIndex(0);
