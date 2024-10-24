@@ -11,8 +11,8 @@ type Props = {
   onToggleFlip: () => void;
   onNext: (nextQuestionId?: string) => void;
   onPrevious: () => void;
-  setCorrectAnswers: React.Dispatch<React.SetStateAction<number>>;
-  setIncorrectAnswers: React.Dispatch<React.SetStateAction<number>>;
+  setCorrectAnswers: React.Dispatch<React.SetStateAction<number>>; // or a function
+  setIncorrectAnswers: React.Dispatch<React.SetStateAction<number>>; // or a function
 };
 
 const FlashcardDisplay = ({
@@ -42,9 +42,9 @@ const FlashcardDisplay = ({
 
     if (!firstClickRecorded) {
       if (isAnswerCorrect) {
-        setCorrectAnswers((prevCorrect) => prevCorrect + 1);
+        setCorrectAnswers((prevCorrect) => prevCorrect + 1); // Increment correct answers
       } else {
-        setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1);
+        setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1); // Increment incorrect answers
       }
       setFirstClickRecorded(true);
     }
