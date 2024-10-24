@@ -1,3 +1,4 @@
+// FlashCardDisplay.tsx
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, RotateCw, ArrowRight } from "react-feather";
 import FlashCardContent from "./FlashCardContent";
@@ -6,13 +7,13 @@ import SelfReportButtons from "./SelfReportButtons";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 
 type Props = {
-  flashcard: Flashcard;
+  flashcard: Flashcard | null; // Allow flashcard to be null initially
   isFlipped: boolean;
   onToggleFlip: () => void;
   onNext: (nextQuestionId?: string) => void;
   onPrevious: () => void;
-  setCorrectAnswers: React.Dispatch<React.SetStateAction<number>>;
-  setIncorrectAnswers: React.Dispatch<React.SetStateAction<number>>;
+  setCorrectAnswers: React.Dispatch<React.SetStateAction<number>>; // or a function
+  setIncorrectAnswers: React.Dispatch<React.SetStateAction<number>>; // or a function
 };
 
 const FlashcardDisplay = ({
@@ -35,6 +36,11 @@ const FlashcardDisplay = ({
     setFirstClickRecorded(false);
   }, [flashcard]);
 
+  // Handle if flashcard is null or undefined
+  if (!flashcard) {
+    return <div>Loading...</div>; // Render a loading state or nothing
+  }
+
   const handleOptionSelect = (index: number) => {
     setSelectedOption(index);
     const isAnswerCorrect = index === flashcard.correctOptionIndex;
@@ -42,9 +48,9 @@ const FlashcardDisplay = ({
 
     if (!firstClickRecorded) {
       if (isAnswerCorrect) {
-        setCorrectAnswers((prevCorrect) => prevCorrect + 1);
+        setCorrectAnswers((prevCorrect) => prevCorrect + 1); // Increment correct answers
       } else {
-        setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1);
+        setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1); // Increment incorrect answers
       }
       setFirstClickRecorded(true);
     }
