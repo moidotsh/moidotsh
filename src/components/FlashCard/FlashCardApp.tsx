@@ -73,13 +73,12 @@ const FlashcardApp = () => {
   };
 
   const startFlashcards = () => {
-    if (currentSelectedCategory) {
-      useFlashcardStore
-        .getState()
-        .startFlashcards(currentSelectedCategory, currentSelectedFolders);
-    } else {
-      console.error("Category not selected!");
-    }
+    const category = currentSelectedCategory ?? null; // Fallback to null if no category
+    const folders =
+      currentSelectedFolders?.length > 0 ? currentSelectedFolders : []; // Fallback to an empty array if no folders
+
+    // Call startFlashcards with category and folders
+    useFlashcardStore.getState().startFlashcards(category, folders); // Pass category and folders as arguments
   };
 
   // Check if all flashcards have been completed
