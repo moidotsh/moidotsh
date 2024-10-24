@@ -1,13 +1,12 @@
 // AppDock.tsx
 
 import React, { useState, useEffect } from "react";
-import { Terminal, Music, Briefcase } from "react-feather";
+import { Terminal, Music, Briefcase, BookOpen } from "react-feather";
 import { useVisibilityStore } from "@/stores/visibilityStore";
 
-type Props = {
-};
+type Props = {};
 
-function AppDock({ }: Props) {
+function AppDock({}: Props) {
   const explorerVisible = useVisibilityStore((state) => state.explorerVisible);
   const toggleExplorer = useVisibilityStore((state) => state.toggleExplorer);
   const terminalVisible = useVisibilityStore((state) => state.terminalVisible);
@@ -15,12 +14,19 @@ function AppDock({ }: Props) {
   const musicVisible = useVisibilityStore((state) => state.musicVisible);
   const toggleMusic = useVisibilityStore((state) => state.toggleMusic);
 
+  const flashcardsVisible = useVisibilityStore(
+    (state) => state.flashcardsVisible,
+  );
+  const toggleFlashcards = useVisibilityStore(
+    (state) => state.toggleFlashcards,
+  );
+
   const Apps = [
     { name: "Explorer", icon: <Briefcase />, visible: explorerVisible },
     { name: "Music", icon: <Music />, visible: musicVisible },
     { name: "Terminal", icon: <Terminal />, visible: terminalVisible },
+    { name: "Cards", icon: <BookOpen />, visible: flashcardsVisible },
   ];
-
 
   const [isTouched, setIsTouched] = useState<number | null>(null);
 
@@ -32,6 +38,7 @@ function AppDock({ }: Props) {
     app.name === "Explorer" && toggleExplorer();
     app.name === "Terminal" && toggleTerminal();
     app.name === "Music" && toggleMusic();
+    app.name === "Cards" && toggleFlashcards();
 
     // Set the touched state to move the icon upwards
     setIsTouched(index);
@@ -65,13 +72,13 @@ function AppDock({ }: Props) {
                 </div>
                 <div
                   style={{
-                    background: app.visible === false ? "transparent" : "#ffffff",  // Set to transparent when not visible
+                    background:
+                      app.visible === false ? "transparent" : "#ffffff", // Set to transparent when not visible
                   }}
                   className="absolute bottom-[-5px] left-[50%] translate-x-[-50%] w-3 h-3 rounded-full"
                 ></div>
               </li>
             ))}
-
           </ul>
         </div>
       </div>
