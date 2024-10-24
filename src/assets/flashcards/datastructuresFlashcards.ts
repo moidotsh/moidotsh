@@ -6,6 +6,8 @@ export const dataStructuresFlashcards: Flashcard[] = [
     front: "What is a linked list?",
     options: ["A linear data structure", "A stack", "A queue", "A binary tree"],
     correctOptionIndex: 0,
+    chapter: 4,
+    unit: 1,
   },
   {
     id: "dataStructuresQ2",
@@ -17,5 +19,7 @@ export const dataStructuresFlashcards: Flashcard[] = [
       "A graph",
     ],
     correctOptionIndex: 2,
+    chapter: 4,
+    unit: 1,
   },
 ];
