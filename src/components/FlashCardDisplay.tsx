@@ -1,10 +1,16 @@
-// src/components/FlashCardDisplay.tsx
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, ArrowRight, RotateCw } from "react-feather";
+import {
+  ArrowLeft,
+  RotateCw,
+  XCircle,
+  CheckCircle,
+  Check,
+  ArrowRight,
+} from "react-feather";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 import { splitMathText } from "@/utils/latexUtils";
 import "katex/dist/katex.min.css";
-import { BlockMath, InlineMath } from "react-katex";
+import { InlineMath } from "react-katex";
 
 type Props = {
   flashcard: Flashcard;
@@ -32,7 +38,8 @@ const FlashcardDisplay = ({
 
   const handleOptionSelect = (index: number) => {
     setSelectedOption(index);
-    setIsCorrect(index === flashcard.correctOptionIndex);
+    const correct = index === flashcard.correctOptionIndex;
+    setIsCorrect(correct);
   };
 
   const handleNext = () => {
@@ -46,7 +53,6 @@ const FlashcardDisplay = ({
   // Function to render LaTeX or text content
   const renderContent = (text: string) => {
     const parts = splitMathText(text);
-
     return parts.map((part, index) => {
       if (part.type === "latex") {
         return <InlineMath math={part.content} key={index} />;
@@ -56,9 +62,36 @@ const FlashcardDisplay = ({
     });
   };
 
+  // Rendering multiple-choice options if they exist
+  const renderMultipleChoice = () => {
+    return (
+      <div className="flex flex-col space-y-2 overflow-y-auto max-h-[10rem] w-full px-4">
+        {flashcard.options?.map((option, index) => (
+          <button
+            key={index}
+            className={`p-2 rounded border ${
+              selectedOption === index
+                ? index === flashcard.correctOptionIndex
+                  ? "bg-green-300"
+                  : "bg-red-300"
+                : "bg-gray-300"
+            }`}
+            onClick={() => handleOptionSelect(index)}
+            disabled={isCorrect === true} // Disable buttons only when the correct answer is selected
+          >
+            {renderContent(option)}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+  // Determine if the card is a multiple-choice or regular front/back card
+  const isMultipleChoice = !!flashcard.options;
+
   return (
     <div className="flex flex-col items-center w-full h-full overflow-y-auto">
-      {/* Question or Answer container */}
+      {/* Flashcard content */}
       <div className="w-full text-center border-2 border-gray-300 rounded-lg p-4 bg-white mb-4 relative">
         <h3 className="text-md">
           {isFlipped && flashcard.back
@@ -67,44 +100,37 @@ const FlashcardDisplay = ({
         </h3>
       </div>
 
-      {/* Multiple Choice Options */}
-      {flashcard.options && (
-        <div className="flex flex-col space-y-2 overflow-y-auto max-h-[10rem] w-full px-4">
-          {flashcard.options?.map((option, index) => (
-            <button
-              key={index}
-              className={`p-2 rounded border ${
-                selectedOption === index
-                  ? index === flashcard.correctOptionIndex
-                    ? "bg-green-300"
-                    : "bg-red-300"
-                  : "bg-gray-300"
-              }`}
-              onClick={() => handleOptionSelect(index)}
-              disabled={isCorrect === true}
-            >
-              {renderContent(option)}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* If it's multiple-choice, render options */}
+      {isMultipleChoice && renderMultipleChoice()}
 
       {/* Navigation and Flip Buttons */}
       <div className="w-full mt-4 flex justify-between px-4">
+        {/* Left Button - always a back arrow */}
         <button onClick={onPrevious}>
           <ArrowLeft />
         </button>
 
-        {!flashcard.options && (
+        {/* Middle Button - flip for front/back cards or empty space for multiple-choice */}
+        {!isMultipleChoice && (
           <button onClick={onToggleFlip}>
             <RotateCw />
           </button>
         )}
 
-        {(!flashcard.options || isCorrect === true) && (
-          <button onClick={handleNext}>
+        {/* Right Button - either a next arrow (if answer is correct) or checkmark for front/back cards */}
+        {isMultipleChoice ? (
+          <button
+            onClick={handleNext}
+            disabled={!isCorrect} // Disable "Next" until the correct answer is chosen
+          >
             <ArrowRight />
           </button>
+        ) : (
+          isFlipped && (
+            <button onClick={() => onNext(flashcard.nextQuestionId)}>
+              <Check color="green" />
+            </button>
+          )
         )}
       </div>
     </div>
