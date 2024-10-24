@@ -138,7 +138,7 @@ const FlashcardApp = () => {
   if (index === -1) {
     return (
       <div className="flex flex-col items-center justify-center h-full w-full">
-        <h1>You've completed this deck!</h1>
+        <h1>You&#39;ve completed this deck!</h1>
         <button
           className="mt-4 p-2 bg-green-500 text-white rounded"
           onClick={() => {
