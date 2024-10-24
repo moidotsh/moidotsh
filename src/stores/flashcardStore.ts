@@ -154,8 +154,11 @@ export const useFlashcardStore = create<FlashcardState>((set) => ({
         : [...state.selectedFolders, folderName],
     })),
 
-  startFlashcards: async () => {
+  startFlashcards: async (category: string | null, folders: string[]) => {
     try {
+      console.log("Starting flashcards for category:", category);
+      console.log("Selected folders:", folders);
+
       const selectedFlashcards = await loadFlashcardsFromAPI();
       const shuffledFlashcards = shuffleArray(selectedFlashcards);
       set({
