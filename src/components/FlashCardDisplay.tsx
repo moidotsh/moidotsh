@@ -1,6 +1,8 @@
+// src/components/FlashCardDisplay.tsx
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, RotateCw } from "react-feather";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
+import { splitMathText } from "@/utils/latexUtils";
 import "katex/dist/katex.min.css";
 import { BlockMath, InlineMath } from "react-katex";
 
@@ -10,22 +12,6 @@ type Props = {
   onToggleFlip: () => void;
   onNext: (nextQuestionId?: string) => void;
   onPrevious: () => void;
-};
-
-// Helper function to split LaTeX and non-LaTeX parts
-const splitMathText = (text: string) => {
-  const parts = text.split(/(\\\(.*?\\\)|\\\[.*?\\\])/); // Splits on inline or block LaTeX
-  console.log("Text parts:", parts); // Log the split parts to the console
-
-  return parts.map((part, index) => {
-    if (part.startsWith("\\(") || part.startsWith("\\[")) {
-      // Strip the outer LaTeX delimiters before passing to InlineMath
-      const cleanedPart = part.slice(2, -2); // Remove leading \\( and trailing \\)
-      return <InlineMath math={cleanedPart} key={index} />;
-    } else {
-      return part;
-    }
-  });
 };
 
 const FlashcardDisplay = ({
@@ -51,10 +37,23 @@ const FlashcardDisplay = ({
 
   const handleNext = () => {
     if (flashcard.nextQuestionId) {
-      onNext(flashcard.nextQuestionId); // Pass nextQuestionId to parent
+      onNext(flashcard.nextQuestionId);
     } else {
-      onNext(); // Just move to the next card if no nextQuestionId
+      onNext();
     }
+  };
+
+  // Function to render LaTeX or text content
+  const renderContent = (text: string) => {
+    const parts = splitMathText(text);
+
+    return parts.map((part, index) => {
+      if (part.type === "latex") {
+        return <InlineMath math={part.content} key={index} />;
+      } else {
+        return <span key={index}>{part.content}</span>;
+      }
+    });
   };
 
   return (
@@ -63,9 +62,8 @@ const FlashcardDisplay = ({
       <div className="w-full text-center border-2 border-gray-300 rounded-lg p-4 bg-white mb-4 relative">
         <h3 className="text-md">
           {isFlipped && flashcard.back
-            ? splitMathText(flashcard.back) // Parse LaTeX on the back as well
-            : splitMathText(flashcard.front)}{" "}
-          {/* Show the front */}
+            ? renderContent(flashcard.back)
+            : renderContent(flashcard.front)}
         </h3>
       </div>
 
@@ -83,9 +81,9 @@ const FlashcardDisplay = ({
                   : "bg-gray-300"
               }`}
               onClick={() => handleOptionSelect(index)}
-              disabled={isCorrect === true} // Disable all buttons after correct answer
+              disabled={isCorrect === true}
             >
-              {splitMathText(option)} {/* Handle LaTeX and plain text */}
+              {renderContent(option)}
             </button>
           ))}
         </div>

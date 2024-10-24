@@ -1,3 +1,5 @@
+// FlashCardApp.tsx
+
 import React, { useState, useEffect } from "react";
 import withAppTemplate from "./withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
@@ -6,50 +8,11 @@ import {
   MathCategory,
   ComputerScienceCategory,
 } from "@/assets/flashcards/flashcardCategories";
+import { shuffleArray, getSelectedFlashcards } from "@/utils/flashcardUtils";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
 import FlashcardDisplay from "./FlashCardDisplay";
-
-// Helper function to shuffle the flashcards array
-const shuffleArray = (array: Flashcard[]): Flashcard[] => {
-  const allowedFirstCards = array.filter((card) => !card.neverDisplayFirst);
-  const firstCard =
-    allowedFirstCards.length > 0
-      ? allowedFirstCards[Math.floor(Math.random() * allowedFirstCards.length)]
-      : array[0];
-
-  const restCards = array
-    .filter((card) => card.id !== firstCard.id)
-    .sort(() => Math.random() - 0.5);
-
-  return [firstCard, ...restCards];
-};
-
-// Helper function to get flashcards based on selected category and folders
-const getSelectedFlashcards = (
-  selectedCategory: string,
-  selectedFolders: string[],
-): Flashcard[] => {
-  let selectedFlashcards: Flashcard[] = [];
-
-  if (selectedCategory === "Math") {
-    selectedFlashcards = selectedFolders.flatMap(
-      (folderName) =>
-        (flashcardCategories.Math as MathCategory)[
-          folderName as keyof MathCategory
-        ] || [],
-    );
-  } else if (selectedCategory === "Computer Science") {
-    selectedFlashcards = selectedFolders.flatMap(
-      (folderName) =>
-        (flashcardCategories["Computer Science"] as ComputerScienceCategory)[
-          folderName as keyof ComputerScienceCategory
-        ] || [],
-    );
-  }
-  return selectedFlashcards;
-};
 
 const FlashcardApp = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -57,7 +20,7 @@ const FlashcardApp = () => {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [index, setIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [completedChains, setCompletedChains] = useState<string[]>([]); // Track completed root cards
+  const [completedFlashcards, setCompletedFlashcards] = useState<string[]>([]); // Track completed flashcards
   const [currentRoot, setCurrentRoot] = useState<string | null>(null); // Track the current chain root
 
   const categories = Object.keys(flashcardCategories);
@@ -73,7 +36,7 @@ const FlashcardApp = () => {
 
   // Dynamically update the title with category, chapter, unit, and step progression
   useEffect(() => {
-    if (flashcards.length > 0) {
+    if (flashcards.length > 0 && index >= 0) {
       const currentCard = flashcards[index];
       let baseTitle = `${selectedCategory || "Flashcards"} - Chapter ${
         currentCard.chapter
@@ -106,47 +69,63 @@ const FlashcardApp = () => {
     const selectedFlashcards = getSelectedFlashcards(
       selectedCategory,
       selectedFolders,
+      flashcardCategories,
     );
     setFlashcards(shuffleArray(selectedFlashcards));
     setIndex(0);
+    setCompletedFlashcards([]); // Reset completed flashcards
   };
+
+  // Check if all flashcards have been completed
+  const areAllFlashcardsCompleted = () =>
+    completedFlashcards.length === flashcards.length;
 
   // Handle the chain by following the `nextQuestionId`
   const handleNext = (nextQuestionId?: string) => {
+    const currentCardId = flashcards[index].id;
+
+    // Mark the current card as completed
+    if (!completedFlashcards.includes(currentCardId)) {
+      setCompletedFlashcards((prev) => [...prev, currentCardId]);
+    }
+
+    // If all cards are completed, show completion message
+    if (areAllFlashcardsCompleted()) {
+      setIndex(-1); // Set index to -1 to render the completion message
+      return;
+    }
+
+    // If there's a next card in the chain, move to it
     if (nextQuestionId) {
       const nextIndex = flashcards.findIndex(
         (card) => card.id === nextQuestionId,
       );
-      if (nextIndex !== -1) {
-        setIndex(nextIndex);
-      }
-    } else {
-      let nextIndex = index + 1;
-
-      // Skip over any cards that have `neverDisplayFirst` and ensure we avoid completed chains
-      while (
-        nextIndex < flashcards.length &&
-        (flashcards[nextIndex].neverDisplayFirst ||
-          completedChains.includes(flashcards[nextIndex].id))
+      if (
+        nextIndex !== -1 &&
+        !completedFlashcards.includes(flashcards[nextIndex].id)
       ) {
-        nextIndex++;
+        setIndex(nextIndex);
+        return;
       }
-
-      // If the current root card was part of a chain and it completes, add it to completedChains
-      if (currentRoot && !flashcards[nextIndex]?.nextQuestionId) {
-        setCompletedChains((prev) => [...prev, currentRoot]);
-      }
-
-      if (nextIndex >= flashcards.length) {
-        nextIndex = 0;
-      }
-
-      setCurrentRoot(
-        flashcards[nextIndex].nextQuestionId ? flashcards[nextIndex].id : null,
-      );
-
-      setIndex(nextIndex);
     }
+
+    // Try to find the next card that hasn't been completed
+    let nextIndex = index + 1;
+
+    while (
+      nextIndex < flashcards.length &&
+      completedFlashcards.includes(flashcards[nextIndex].id)
+    ) {
+      nextIndex++;
+    }
+
+    // If no more uncompleted cards are found, mark deck as completed
+    if (nextIndex >= flashcards.length || areAllFlashcardsCompleted()) {
+      setIndex(-1); // Show completion message
+    } else {
+      setIndex(nextIndex); // Set the index to the next uncompleted card
+    }
+
     setIsFlipped(false); // Reset flip state when moving to the next card
   };
 
@@ -154,6 +133,24 @@ const FlashcardApp = () => {
     setIndex(index === 0 ? flashcards.length - 1 : index - 1);
     setIsFlipped(false); // Reset flip state when moving to the previous card
   };
+
+  // Render the completion message when all flashcards are done
+  if (index === -1) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full w-full">
+        <h1>You've completed this deck!</h1>
+        <button
+          className="mt-4 p-2 bg-green-500 text-white rounded"
+          onClick={() => {
+            setCompletedFlashcards([]); // Reset completed cards
+            setIndex(0); // Restart the deck
+          }}
+        >
+          Restart Deck
+        </button>
+      </div>
+    );
+  }
 
   if (flashcards.length === 0) {
     if (!selectedCategory) {
