@@ -238,14 +238,15 @@ export const precalculusFlashcards: Flashcard[] = [
   },
   {
     id: "precalculusQ7",
-    front: "What is the formula for the sine of a sum ( sin(A + B) )?",
+    front: "What is the formula for the sine of a sum \\( \\sin(A + B) \\)?",
     back: "\\( \\sin(A + B) = \\sin A \\cos B + \\cos A \\sin B \\)", // Added proper LaTeX delimiters
     chapter: 4,
     unit: 1,
   },
   {
     id: "precalculusQ8",
-    front: "What is the formula for the cosine of a difference ( cos(A - B) )?",
+    front:
+      "What is the formula for the cosine of a difference \\( \\cos(A - B) \\)?",
     back: "\\( \\cos(A - B) = \\cos A \\cos B + \\sin A \\sin B \\)", // Added proper LaTeX delimiters
     chapter: 4,
     unit: 1,
