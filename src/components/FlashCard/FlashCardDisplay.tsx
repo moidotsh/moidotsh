@@ -86,7 +86,7 @@ const FlashcardDisplay = ({
       {/* Multiple-choice options */}
       {isMultipleChoice && (
         <MultipleChoiceOptions
-          options={flashcard.options}
+          options={flashcard.options ?? []} // Provide an empty array if options is undefined
           correctOptionIndex={flashcard.correctOptionIndex}
           selectedOption={selectedOption}
           handleOptionSelect={handleOptionSelect}
