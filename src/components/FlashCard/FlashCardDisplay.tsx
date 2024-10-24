@@ -1,3 +1,4 @@
+// FlashCardDisplay.tsx
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, RotateCw, ArrowRight } from "react-feather";
 import FlashCardContent from "./FlashCardContent";
@@ -6,7 +7,7 @@ import SelfReportButtons from "./SelfReportButtons";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 
 type Props = {
-  flashcard: Flashcard;
+  flashcard: Flashcard | null; // Allow flashcard to be null initially
   isFlipped: boolean;
   onToggleFlip: () => void;
   onNext: (nextQuestionId?: string) => void;
@@ -34,6 +35,11 @@ const FlashcardDisplay = ({
     setIsCorrect(null);
     setFirstClickRecorded(false);
   }, [flashcard]);
+
+  // Handle if flashcard is null or undefined
+  if (!flashcard) {
+    return <div>Loading...</div>; // Render a loading state or nothing
+  }
 
   const handleOptionSelect = (index: number) => {
     setSelectedOption(index);

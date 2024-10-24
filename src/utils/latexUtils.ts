@@ -1,14 +1,20 @@
-// src/utils/latexUtils.ts
-
 export const splitMathText = (text: string) => {
-  const parts = text.split(/(\\\(.*?\\\)|\\\[.*?\\\])/); // Split on LaTeX expressions
+  // Clean text by removing unwanted control characters like \u000c
+  const cleanedText = text.replace(/[\u000c]/g, "");
+
+  // This regex ensures LaTeX inline \( ... \) and block \[ ... \] are split properly, without losing any backslashes
+  const parts = cleanedText.split(/(\\\(.*?\\\)|\\\[.*?\\\])/g);
 
   return parts.map((part) => {
-    if (part.startsWith("\\(") || part.startsWith("\\[")) {
-      // Strip the outer LaTeX delimiters
-      return { type: "latex", content: part.slice(2, -2) }; // Mark as LaTeX content
+    if (part.startsWith("\\(") && part.endsWith("\\)")) {
+      // Handle inline LaTeX
+      return { type: "latex-inline", content: part.slice(2, -2) };
+    } else if (part.startsWith("\\[") && part.endsWith("\\]")) {
+      // Handle block LaTeX
+      return { type: "latex-block", content: part.slice(2, -2) };
     } else {
-      return { type: "text", content: part }; // Mark as plain text content
+      // Plain text
+      return { type: "text", content: part };
     }
   });
 };

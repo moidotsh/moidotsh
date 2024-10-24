@@ -1,3 +1,4 @@
+// FlashCardApp.tsx
 import React, { useEffect } from "react";
 import withAppTemplate from "../withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
@@ -44,6 +45,12 @@ const FlashcardApp = () => {
   useEffect(() => {
     if (currentFlashcards.length > 0 && currentIndex >= 0) {
       const currentCard = currentFlashcards[currentIndex];
+
+      // Ensure currentCard exists
+      if (!currentCard) {
+        return;
+      }
+
       let baseTitle = `${currentSelectedCategory || "Flashcards"} - Chapter ${
         currentCard.chapter
       }, Unit ${currentCard.unit}`;
@@ -130,6 +137,11 @@ const FlashcardApp = () => {
         />
       );
     }
+  }
+
+  // If currentFlashcards is empty or currentIndex is out of bounds
+  if (!currentFlashcards[currentIndex]) {
+    return <div>Loading...</div>;
   }
 
   return (
