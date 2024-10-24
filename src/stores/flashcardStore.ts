@@ -154,19 +154,10 @@ export const useFlashcardStore = create<FlashcardState>((set) => ({
         : [...state.selectedFolders, folderName],
     })),
 
-  startFlashcards: async (
-    category: string | null = null,
-    folders: string[] = [],
-  ) => {
+  startFlashcards: async () => {
     try {
-      console.log("Starting flashcards...");
-
-      // Fetch flashcards from API or use hardcoded defaults in the API
       const selectedFlashcards = await loadFlashcardsFromAPI();
-
-      // Shuffle and set the flashcards
       const shuffledFlashcards = shuffleArray(selectedFlashcards);
-
       set({
         flashcards: shuffledFlashcards,
         index: 0,
