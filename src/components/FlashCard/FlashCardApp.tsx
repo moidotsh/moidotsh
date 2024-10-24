@@ -1,7 +1,7 @@
 // FlashCardApp.tsx
 
 import React, { useState, useEffect } from "react";
-import withAppTemplate from "./withAppTemplate";
+import withAppTemplate from "../withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
 import {
   flashcardCategories,
@@ -22,6 +22,9 @@ const FlashcardApp = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [completedFlashcards, setCompletedFlashcards] = useState<string[]>([]); // Track completed flashcards
   const [currentRoot, setCurrentRoot] = useState<string | null>(null); // Track the current chain root
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
 
   const categories = Object.keys(flashcardCategories);
   const folders = selectedCategory
@@ -80,8 +83,8 @@ const FlashcardApp = () => {
   const areAllFlashcardsCompleted = () =>
     completedFlashcards.length === flashcards.length;
 
-  // Handle the chain by following the `nextQuestionId`
   const handleNext = (nextQuestionId?: string) => {
+    setTotalQuestions(totalQuestions + 1); // Increment total questions asked
     const currentCardId = flashcards[index].id;
 
     // Mark the current card as completed
@@ -89,41 +92,35 @@ const FlashcardApp = () => {
       setCompletedFlashcards((prev) => [...prev, currentCardId]);
     }
 
-    // If all cards are completed, show completion message
-    if (areAllFlashcardsCompleted()) {
-      setIndex(-1); // Set index to -1 to render the completion message
-      return;
-    }
-
-    // If there's a next card in the chain, move to it
+    // If there is a nextQuestionId, find that card in the deck
     if (nextQuestionId) {
-      const nextIndex = flashcards.findIndex(
+      const nextCardIndex = flashcards.findIndex(
         (card) => card.id === nextQuestionId,
       );
       if (
-        nextIndex !== -1 &&
-        !completedFlashcards.includes(flashcards[nextIndex].id)
+        nextCardIndex !== -1 &&
+        !completedFlashcards.includes(flashcards[nextCardIndex].id)
       ) {
-        setIndex(nextIndex);
+        setIndex(nextCardIndex);
         return;
       }
     }
 
-    // Try to find the next card that hasn't been completed
+    // Move to the next card in the list that isn't completed
     let nextIndex = index + 1;
-
     while (
       nextIndex < flashcards.length &&
-      completedFlashcards.includes(flashcards[nextIndex].id)
+      (completedFlashcards.includes(flashcards[nextIndex].id) ||
+        flashcards[nextIndex].neverDisplayFirst)
     ) {
       nextIndex++;
     }
 
-    // If no more uncompleted cards are found, mark deck as completed
-    if (nextIndex >= flashcards.length || areAllFlashcardsCompleted()) {
-      setIndex(-1); // Show completion message
+    // If all cards are completed or the end is reached, restart or show a message
+    if (nextIndex >= flashcards.length) {
+      setIndex(-1); // End or restart logic
     } else {
-      setIndex(nextIndex); // Set the index to the next uncompleted card
+      setIndex(nextIndex);
     }
 
     setIsFlipped(false); // Reset flip state when moving to the next card
@@ -137,13 +134,24 @@ const FlashcardApp = () => {
   // Render the completion message when all flashcards are done
   if (index === -1) {
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full">
-        <h1>You&#39;ve completed this deck!</h1>
+      <div className="flex flex-col text-center items-center justify-center h-full w-full">
+        <h1>
+          You&#39;ve completed this deck with{" "}
+          <span className="bg-red-200 p-0.5">
+            {correctAnswers} out of {totalQuestions}
+          </span>{" "}
+          questions correct for a score of{" "}
+          {Math.round((correctAnswers / totalQuestions) * 100)}%!
+        </h1>
+
         <button
           className="mt-4 p-2 bg-green-500 text-white rounded"
           onClick={() => {
             setCompletedFlashcards([]); // Reset completed cards
             setIndex(0); // Restart the deck
+            setCorrectAnswers(0); // Reset correct answers
+            setIncorrectAnswers(0); // Reset incorrect answers
+            setTotalQuestions(0); // Reset total questions
           }}
         >
           Restart Deck
@@ -179,6 +187,8 @@ const FlashcardApp = () => {
       onToggleFlip={() => setIsFlipped(!isFlipped)}
       onNext={handleNext}
       onPrevious={handlePrevious}
+      setCorrectAnswers={setCorrectAnswers}
+      setIncorrectAnswers={setIncorrectAnswers}
     />
   );
 };
