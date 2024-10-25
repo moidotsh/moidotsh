@@ -1,0 +1,102 @@
+[
+  {
+    "id": "reciprocal_sine",
+    "front": "What is the reciprocal identity for sine?",
+    "options": [
+      "\\(\\sin \\theta = \\frac{1}{\\csc \\theta}\\) and \\(\\csc \\theta = \\frac{1}{\\sin \\theta}\\)",
+      "\\(\\sin \\theta = \\frac{1}{\\sec \\theta}\\)",
+      "\\(\\sin \\theta = \\frac{1}{\\tan \\theta}\\)",
+      "\\(\\sin \\theta = \\frac{1}{\\cos \\theta}\\)"
+    ]
+  },
+  {
+    "id": "reciprocal_cosine",
+    "front": "What is the reciprocal identity for cosine?",
+    "options": [
+      "\\(\\cos \\theta = \\frac{1}{\\sec \\theta}\\) and \\(\\sec \\theta = \\frac{1}{\\cos \\theta}\\)",
+      "\\(\\cos \\theta = \\frac{1}{\\csc \\theta}\\)",
+      "\\(\\cos \\theta = \\frac{1}{\\tan \\theta}\\)",
+      "\\(\\cos \\theta = \\frac{1}{\\sin \\theta}\\)"
+    ]
+  },
+  {
+    "id": "quotient_tangent",
+    "front": "What is the quotient identity for tangent?",
+    "options": [
+      "\\(\\tan \\theta = \\frac{\\sin \\theta}{\\cos \\theta}\\)",
+      "\\(\\tan \\theta = \\frac{\\cos \\theta}{\\sin \\theta}\\)",
+      "\\(\\tan \\theta = \\sin \\theta \\cos \\theta\\)",
+      "\\(\\tan \\theta = \\frac{1}{\\cos \\theta}\\)"
+    ]
+  },
+  {
+    "id": "quotient_cotangent",
+    "front": "What is the quotient identity for cotangent?",
+    "options": [
+      "\\(\\cot \\theta = \\frac{\\cos \\theta}{\\sin \\theta}\\)",
+      "\\(\\cot \\theta = \\frac{\\sin \\theta}{\\cos \\theta}\\)",
+      "\\(\\cot \\theta = \\sin \\theta \\cos \\theta\\)",
+      "\\(\\cot \\theta = \\frac{1}{\\sin \\theta}\\)"
+    ]
+  },
+  {
+    "id": "pythagorean_main",
+    "front": "What is the main Pythagorean identity?",
+    "options": [
+      "\\(\\sin^2 \\theta + \\cos^2 \\theta = 1\\)",
+      "\\(\\tan^2 \\theta + \\cos^2 \\theta = 1\\)",
+      "\\(\\sin^2 \\theta + \\tan^2 \\theta = 1\\)",
+      "\\(\\csc^2 \\theta + \\sec^2 \\theta = 1\\)"
+    ]
+  },
+  {
+    "id": "pythagorean_tangent",
+    "front": "What is the Pythagorean identity involving tangent?",
+    "options": [
+      "\\(1 + \\tan^2 \\theta = \\sec^2 \\theta\\)",
+      "\\(1 + \\sin^2 \\theta = \\sec^2 \\theta\\)",
+      "\\(1 + \\cos^2 \\theta = \\tan^2 \\theta\\)",
+      "\\(\\tan^2 \\theta = \\sec^2 \\theta\\)"
+    ]
+  },
+  {
+    "id": "pythagorean_cotangent",
+    "front": "What is the Pythagorean identity involving cotangent?",
+    "options": [
+      "\\(1 + \\cot^2 \\theta = \\csc^2 \\theta\\)",
+      "\\(1 + \\sin^2 \\theta = \\csc^2 \\theta\\)",
+      "\\(1 + \\cos^2 \\theta = \\cot^2 \\theta\\)",
+      "\\(\\cot^2 \\theta = \\csc^2 \\theta\\)"
+    ]
+  },
+  {
+    "id": "verify_identity_technique",
+    "front": "Best first step to verify a trig identity?",
+    "options": [
+      "Rewrite in terms of sine and cosine",
+      "Multiply both sides by denominator",
+      "Square both sides",
+      "Use unit circle"
+    ]
+  },
+  {
+    "id": "simplify_expression",
+    "front": "Simplify \\(\\frac{\\tan \\theta}{\\sec \\theta}\\)",
+    "options": [
+      "\\(\\sin \\theta\\)",
+      "\\(\\cos \\theta\\)",
+      "\\(\\tan \\theta\\)",
+      "\\(1\\)"
+    ]
+  },
+  {
+    "id": "double_angle_sine",
+    "front": "What is \\(\\sin^2 \\theta\\) in terms of \\(\\cos(2\\theta)\\)?",
+    "options": [
+      "\\(\\frac{1 - \\cos(2\\theta)}{2}\\)",
+      "\\(\\frac{1 + \\cos(2\\theta)}{2}\\)",
+      "\\(\\sin(2\\theta)\\)",
+      "\\(1 - \\cos(2\\theta)\\)"
+    ]
+  }
+]

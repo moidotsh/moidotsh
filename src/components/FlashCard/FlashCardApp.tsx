@@ -1,127 +1,89 @@
-// FlashCardApp.tsx
+// src/components/FlashCard/FlashCardApp.tsx
 import React, { useEffect } from "react";
 import withAppTemplate from "../withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
 import { flashcardCategories } from "@/assets/flashcards/flashcardCategories";
-import { useFlashcardStore } from "@/stores/flashcardStore";
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
 import FlashcardDisplay from "./FlashCardDisplay";
-import { fetchFlashcardsFromAPI } from "@/utils/flashcardUtils";
+import {
+  useNavigationStore,
+  useProgressStore,
+  useCardStore,
+} from "@/stores/flashcard";
 
 const FlashcardApp = () => {
-  const currentSelectedCategory = useFlashcardStore(
-    (state) => state.selectedCategory,
-  );
-  const currentSelectedFolders = useFlashcardStore(
-    (state) => state.selectedFolders,
-  );
-  const currentFlashcards = useFlashcardStore((state) => state.flashcards);
-  const currentIndex = useFlashcardStore((state) => state.index);
-  const isFlipped = useFlashcardStore((state) => state.isFlipped);
-  const completedCards = useFlashcardStore(
-    (state) => state.completedFlashcards,
-  );
-  const totalQuestions = useFlashcardStore((state) => state.totalQuestions);
-  const correctAnswers = useFlashcardStore((state) => state.correctAnswers);
-  const incorrectAnswers = useFlashcardStore((state) => state.incorrectAnswers);
+  const {
+    selectedCategory,
+    selectedFolders,
+    setSelectedCategory,
+    toggleFolderSelection,
+  } = useNavigationStore();
 
-  const setSelectedCategory = useFlashcardStore(
-    (state) => state.setSelectedCategory,
-  );
-  const setIsFlipped = useFlashcardStore((state) => state.flipFlashcard);
+  const {
+    correctAnswers,
+    incorrectAnswers,
+    displayableTotal,
+    setDisplayableTotal,
+    resetProgress,
+  } = useProgressStore();
 
-  const categories = Object.keys(flashcardCategories);
-  const folders = currentSelectedCategory
-    ? Object.keys(
-        flashcardCategories[
-          currentSelectedCategory as keyof typeof flashcardCategories
-        ],
-      )
-    : [];
+  const {
+    deck,
+    currentIndex,
+    isFlipped,
+    isLoading,
+    error,
+    loadDeck,
+    nextCard,
+    previousCard,
+    flipCard,
+    getCurrentCard,
+    resetDeck,
+    getDeckStatus,
+  } = useCardStore();
 
   const setTitle = useVisibilityStore((state) => state.setBrowserTitle);
 
-  // Dynamically update the title with category, chapter, unit, and step progression
+  // Set displayable total when deck is loaded
   useEffect(() => {
-    if (currentFlashcards.length > 0 && currentIndex >= 0) {
-      const currentCard = currentFlashcards[currentIndex];
-
-      // Ensure currentCard exists
-      if (!currentCard) {
-        return;
-      }
-
-      let baseTitle = `${currentSelectedCategory || "Flashcards"} - Chapter ${
-        currentCard.chapter
-      }, Unit ${currentCard.unit}`;
-
-      // Include step number if it's part of a multi-step process
-      if (currentCard.totalSteps && currentCard.stepNumber) {
-        baseTitle += ` (${currentCard.stepNumber}/${currentCard.totalSteps})`;
-      }
-
-      setTitle(baseTitle);
-    } else {
-      setTitle(
-        currentSelectedCategory ? "Choose your folder(s)" : "Choose a Category",
-      );
+    if (deck.length > 0) {
+      const displayableCards = deck.filter((card) => !card.neverDisplayFirst);
+      setDisplayableTotal(displayableCards.length);
     }
-  }, [currentFlashcards, currentIndex, currentSelectedCategory, setTitle]);
-
-  const toggleFolderSelection = (folderName: string) => {
-    useFlashcardStore.getState().toggleFolderSelection(folderName);
-  };
+  }, [deck, setDisplayableTotal]);
 
   const startFlashcards = async () => {
-    try {
-      const selectedCategory = useFlashcardStore.getState().selectedCategory;
-      const selectedFolders = useFlashcardStore.getState().selectedFolders;
-
-      if (selectedCategory && selectedFolders.length > 0) {
-        const flashcards = await fetchFlashcardsFromAPI(
-          selectedCategory,
-          selectedFolders,
-        );
-        useFlashcardStore.getState().setFlashcards(flashcards);
-      } else {
-        console.error("Please select a category and folders.");
-      }
-    } catch (error) {
-      console.error("Error loading flashcards:", error);
+    if (selectedCategory && selectedFolders.length > 0) {
+      await loadDeck(selectedCategory, selectedFolders);
     }
   };
 
-  // Check if all flashcards have been completed
-  const areAllFlashcardsCompleted = () =>
-    completedCards.length === currentFlashcards.length;
-
-  const handleNext = (nextQuestionId?: string) => {
-    useFlashcardStore.getState().nextFlashcard(nextQuestionId);
+  const handleRestartDeck = async () => {
+    resetProgress(); // Reset progress first
+    resetDeck(); // Reset card state
+    await startFlashcards(); // Reload the cards
   };
 
-  const handlePrevious = () => {
-    useFlashcardStore.getState().previousFlashcard();
-  };
-
-  // Render the completion message when all flashcards are done
+  // Show completion message
   if (currentIndex === -1) {
+    const totalAnswered = correctAnswers + incorrectAnswers;
+    const scorePercentage = Math.round(
+      (correctAnswers / displayableTotal) * 100,
+    );
+
     return (
       <div className="flex flex-col text-center items-center justify-center h-full w-full">
         <h1>
-          You&#39;ve completed this deck with{" "}
-          <span className="bg-red-200 p-0.5">
-            {correctAnswers} out of {totalQuestions}
+          You've completed the deck with{" "}
+          <span className="bg-green-200 p-0.5">
+            {correctAnswers} out of {displayableTotal}
           </span>{" "}
-          questions correct for a score of{" "}
-          {Math.round((correctAnswers / totalQuestions) * 100)}%!
+          questions correct for a score of {scorePercentage}%!
         </h1>
-
         <button
           className="mt-4 p-2 bg-green-500 text-white rounded"
-          onClick={() => {
-            useFlashcardStore.getState().resetProgress();
-          }}
+          onClick={handleRestartDeck}
         >
           Restart Deck
         </button>
@@ -129,40 +91,56 @@ const FlashcardApp = () => {
     );
   }
 
-  if (currentFlashcards.length === 0) {
-    if (!currentSelectedCategory) {
-      return (
-        <CategorySelector
-          categories={categories}
-          onSelectCategory={setSelectedCategory}
-        />
-      );
-    } else {
-      return (
-        <FolderSelector
-          folders={folders}
-          selectedFolders={currentSelectedFolders}
-          onToggleFolderSelection={toggleFolderSelection}
-          onStart={startFlashcards}
-        />
-      );
-    }
+  // Show loading state
+  if (isLoading) {
+    return <div>Loading flashcards...</div>;
   }
 
-  // If currentFlashcards is empty or currentIndex is out of bounds
-  if (!currentFlashcards[currentIndex]) {
-    return <div>Loading...</div>;
+  // Show error state
+  if (error) {
+    return <div>Error loading flashcards: {error.message}</div>;
+  }
+
+  // Show category selection
+  if (!selectedCategory) {
+    return (
+      <CategorySelector
+        categories={Object.keys(flashcardCategories)}
+        onSelectCategory={setSelectedCategory}
+      />
+    );
+  }
+
+  // Show folder selection
+  if (deck.length === 0) {
+    return (
+      <FolderSelector
+        folders={Object.keys(flashcardCategories[selectedCategory])}
+        selectedFolders={selectedFolders}
+        onToggleFolderSelection={toggleFolderSelection}
+        onStart={startFlashcards}
+      />
+    );
+  }
+
+  const currentCard = getCurrentCard();
+  if (!currentCard) {
+    return <div>No flashcard available</div>;
   }
 
   return (
     <FlashcardDisplay
-      flashcard={currentFlashcards[currentIndex]}
+      flashcard={currentCard}
       isFlipped={isFlipped}
-      onToggleFlip={setIsFlipped}
-      onNext={handleNext}
-      onPrevious={handlePrevious}
-      setCorrectAnswers={useFlashcardStore.getState().markCorrect}
-      setIncorrectAnswers={useFlashcardStore.getState().markIncorrect}
+      onToggleFlip={flipCard}
+      onNext={nextCard}
+      onPrevious={previousCard}
+      setCorrectAnswers={(cardId: string) =>
+        useProgressStore.getState().markCorrect(cardId)
+      }
+      setIncorrectAnswers={(cardId: string) =>
+        useProgressStore.getState().markIncorrect(cardId)
+      }
     />
   );
 };

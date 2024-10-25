@@ -5,15 +5,16 @@ import FlashCardContent from "./FlashCardContent";
 import MultipleChoiceOptions from "./MultipleChoiceOptions";
 import SelfReportButtons from "./SelfReportButtons";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
+import { useCardStore } from "@/stores/flashcard";
 
 type Props = {
-  flashcard: Flashcard | null; // Allow flashcard to be null initially
+  flashcard: Flashcard;
   isFlipped: boolean;
   onToggleFlip: () => void;
   onNext: (nextQuestionId?: string) => void;
   onPrevious: () => void;
-  setCorrectAnswers: React.Dispatch<React.SetStateAction<number>>; // or a function
-  setIncorrectAnswers: React.Dispatch<React.SetStateAction<number>>; // or a function
+  setCorrectAnswers: (cardId: string) => void;
+  setIncorrectAnswers: (cardId: string) => void;
 };
 
 const FlashcardDisplay = ({
@@ -27,54 +28,65 @@ const FlashcardDisplay = ({
 }: Props) => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [firstClickRecorded, setFirstClickRecorded] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const deckStatus = useCardStore((state) => state.getDeckStatus());
 
-  // Reset state when the flashcard changes
   useEffect(() => {
+    // Reset state when card changes
     setSelectedOption(null);
     setIsCorrect(null);
-    setFirstClickRecorded(false);
-  }, [flashcard]);
+    setHasSubmitted(false);
+  }, [flashcard.id]);
+
+  const handleNext = () => {
+    console.log("Handling next for card:", {
+      cardId: flashcard.id,
+      hasNextQuestionId: Boolean(flashcard.nextQuestionId),
+      nextQuestionId: flashcard.nextQuestionId,
+    });
+    onNext(flashcard.nextQuestionId);
+  };
 
   // Handle if flashcard is null or undefined
   if (!flashcard) {
     return <div>Loading...</div>; // Render a loading state or nothing
   }
 
-  const handleOptionSelect = (index: number, originalIndex: number) => {
-    setSelectedOption(index);
-
-    // Assume the first option (options[0]) is always the correct answer
-    const isAnswerCorrect = originalIndex === 0;
-    setIsCorrect(isAnswerCorrect);
-
-    if (!firstClickRecorded) {
-      if (isAnswerCorrect) {
-        setCorrectAnswers((prevCorrect) => prevCorrect + 1);
-      } else {
-        setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1);
-      }
-      setFirstClickRecorded(true);
-    }
-  };
-
-  const handleNext = () => {
-    if (flashcard.nextQuestionId) {
-      onNext(flashcard.nextQuestionId);
-    } else {
-      onNext();
-    }
-  };
-
   const handleSelfReportCorrect = () => {
-    setCorrectAnswers((prevCorrect) => prevCorrect + 1);
+    setCorrectAnswers(flashcard.id);
     handleNext();
   };
 
   const handleSelfReportIncorrect = () => {
-    setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1);
+    setIncorrectAnswers(flashcard.id);
     handleNext();
   };
+
+  const handleOptionSelect = (index: number, originalIndex: number) => {
+    setSelectedOption(index);
+    const isAnswerCorrect = originalIndex === 0;
+    setIsCorrect(isAnswerCorrect);
+
+    if (!hasSubmitted) {
+      if (isAnswerCorrect) {
+        setCorrectAnswers(flashcard.id);
+      } else {
+        setIncorrectAnswers(flashcard.id);
+      }
+      setHasSubmitted(true);
+    }
+  };
+
+  const canProceed =
+    !flashcard.options || (selectedOption !== null && isCorrect);
+
+  console.log("Rendering card:", {
+    id: flashcard.id,
+    isChained: Boolean(flashcard.nextQuestionId),
+    currentStep: flashcard.stepNumber,
+    totalSteps: flashcard.totalSteps,
+    deckStatus,
+  });
 
   const isMultipleChoice = !!flashcard.options;
 
@@ -92,11 +104,12 @@ const FlashcardDisplay = ({
       </div>
 
       {/* Multiple-choice options */}
-      {isMultipleChoice && (
+      {flashcard.options && (
         <MultipleChoiceOptions
-          options={flashcard.options ?? []}
+          options={flashcard.options}
           selectedOption={selectedOption}
           handleOptionSelect={handleOptionSelect}
+          isAnswerLocked={false} // Never lock the answer
         />
       )}
 

@@ -1,0 +1,117 @@
+[
+  {
+    "id": "angle_definition",
+    "front": "What is an angle?",
+    "back": "An angle is formed by two rays (or line segments) that share a common endpoint, called the vertex."
+  },
+  {
+    "id": "angle_units",
+    "front": "What are the two common units to measure angles?",
+    "options": [
+      "Degrees (360 equal parts of a circle) and Radians (based on arc length)",
+      "Meters and Centimeters",
+      "Degrees and Minutes",
+      "Radians and Gradians"
+    ]
+  },
+  {
+    "id": "radian_definition",
+    "front": "What is a radian?",
+    "back": "A radian is the angle subtended by an arc of a circle that has the same length as the radius of the circle."
+  },
+  {
+    "id": "radian_measure_formula",
+    "front": "What is the formula for the radian measure of a central angle?",
+    "options": [
+      "\\( \\theta = \\frac{s}{r} \\) where s is arc length and r is radius",
+      "\\( \\theta = \\frac{r}{s} \\) where r is radius and s is arc length",
+      "\\( \\theta = sr \\) where s is arc length and r is radius",
+      "\\( \\theta = \\frac{s^2}{r} \\) where s is arc length and r is radius"
+    ]
+  },
+  {
+    "id": "degree_radian_relationship",
+    "front": "What is the relationship between degrees and radians?",
+    "options": [
+      "\\( 180^\\circ = \\pi \\text{ radians} \\)",
+      "\\( 360^\\circ = \\pi \\text{ radians} \\)",
+      "\\( 90^\\circ = \\pi \\text{ radians} \\)",
+      "\\( 45^\\circ = \\pi \\text{ radians} \\)"
+    ]
+  },
+  {
+    "id": "convert_deg_to_rad",
+    "front": "What is the formula to convert degrees to radians?",
+    "options": [
+      "\\( \\text{Radians} = \\frac{\\pi}{180^\\circ} \\times \\text{Degrees} \\)",
+      "\\( \\text{Radians} = \\frac{180^\\circ}{\\pi} \\times \\text{Degrees} \\)",
+      "\\( \\text{Radians} = 2\\pi \\times \\text{Degrees} \\)",
+      "\\( \\text{Radians} = \\frac{\\text{Degrees}}{\\pi} \\)"
+    ]
+  },
+  {
+    "id": "convert_90deg_to_rad",
+    "front": "Convert 90° to radians.",
+    "options": [
+      "\\( \\frac{\\pi}{2} \\)",
+      "\\( \\pi \\)",
+      "\\( \\frac{\\pi}{4} \\)",
+      "\\( 2\\pi \\)"
+    ]
+  },
+  {
+    "id": "convert_rad_to_deg",
+    "front": "What is the formula to convert radians to degrees?",
+    "options": [
+      "\\( \\text{Degrees} = \\frac{180^\\circ}{\\pi} \\times \\text{Radians} \\)",
+      "\\( \\text{Degrees} = \\frac{\\pi}{180^\\circ} \\times \\text{Radians} \\)",
+      "\\( \\text{Degrees} = 2\\pi \\times \\text{Radians} \\)",
+      "\\( \\text{Degrees} = \\pi \\times \\text{Radians} \\)"
+    ]
+  },
+  {
+    "id": "convert_pi_third_to_deg",
+    "front": "Convert \\( \\frac{\\pi}{3} \\) radians to degrees.",
+    "options": ["60°", "30°", "45°", "90°"]
+  },
+  {
+    "id": "arc_length_formula",
+    "front": "What is the formula for arc length?",
+    "options": [
+      "\\( s = r\\theta \\) where s is arc length, r is radius, and θ is the angle in radians",
+      "\\( s = \\frac{r}{\\theta} \\) where s is arc length, r is radius, and θ is the angle",
+      "\\( s = 2\\pi r \\) where s is arc length and r is radius",
+      "\\( s = r^2\\theta \\) where s is arc length, r is radius, and θ is the angle"
+    ]
+  },
+  {
+    "id": "arc_length_example",
+    "front": "A circle has a radius of 5 units and the central angle is \\( \\frac{\\pi}{3} \\) radians. Find the arc length.",
+    "options": [
+      "\\( \\frac{5\\pi}{3} \\) units",
+      "\\( \\frac{3\\pi}{5} \\) units",
+      "\\( 5\\pi \\) units",
+      "\\( \\frac{\\pi}{15} \\) units"
+    ]
+  },
+  {
+    "id": "radian_concept",
+    "front": "What is a radian? (conceptual definition)",
+    "back": "The angle subtended by an arc of a circle that has the same length as the radius of the circle."
+  },
+  {
+    "id": "radian_measure_formula_concept",
+    "front": "What does the formula \\( \\theta = \\frac{s}{r} \\) represent in angle measurement?",
+    "back": "It's the formula for the radian measure of a central angle, where s is arc length and r is radius."
+  },
+  {
+    "id": "degree_radian_conversion_concept",
+    "front": "What is the fundamental relationship between degrees and radians?",
+    "back": "\\( 180^\\circ = \\pi \\text{ radians} \\)"
+  },
+  {
+    "id": "arc_length_formula_concept",
+    "front": "What does the formula \\( s = r\\theta \\) represent?",
+    "back": "It's the formula for arc length, where s is arc length, r is radius, and θ is the angle in radians."
+  }
+]

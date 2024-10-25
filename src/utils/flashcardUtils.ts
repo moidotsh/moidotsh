@@ -1,8 +1,6 @@
-// flashcardUtils.ts
-
+// src/utils/flashcardUtils.ts
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 
-// Function to fetch flashcards from the API based on the selected category and folders
 export const fetchFlashcardsFromAPI = async (
   selectedCategory: string,
   selectedFolders: string[],
@@ -12,16 +10,24 @@ export const fetchFlashcardsFromAPI = async (
     folders: selectedFolders,
   });
 
-  const response = await fetch(
-    `/api/flashcards?category=${encodeURIComponent(
-      selectedCategory,
-    )}&folders=${encodeURIComponent(selectedFolders.join(","))}`,
-  );
+  try {
+    const queryString = new URLSearchParams({
+      category: selectedCategory,
+      folders: selectedFolders.join(","),
+    }).toString();
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch flashcards.");
+    const response = await fetch(`/api/flashcards?${queryString}`);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to fetch flashcards");
+    }
+
+    const flashcards = await response.json();
+    console.log(`Received ${flashcards.length} flashcards from API`);
+    return flashcards;
+  } catch (error) {
+    console.error("Error fetching flashcards:", error);
+    throw error;
   }
-
-  const flashcards = await response.json();
-  return flashcards;
 };
