@@ -1,0 +1,52 @@
+[
+  {
+    "id": "calc1Q1",
+    "front": "What is a limit in calculus?",
+    "back": "A limit describes the value that a function approaches as the input approaches a certain point."
+  },
+  {
+    "id": "calc1Q2",
+    "front": "How is a limit expressed mathematically?",
+    "back": "lim(x → c) f(x) = L, where f(x) approaches L as x approaches c."
+  },
+  {
+    "id": "calc1Q3",
+    "front": "What does it mean for a function to be continuous at a point?",
+    "back": "A function is continuous at x = c if the limit of the function as x approaches c is equal to the function’s value at c."
+  },
+  {
+    "id": "calc1Q4",
+    "front": "What is a derivative?",
+    "back": "The derivative of a function represents the rate of change of the function's output with respect to its input."
+  },
+  {
+    "id": "calc1Q5",
+    "front": "How is the derivative of a function expressed?",
+    "back": "The derivative of f(x) is denoted as f'(x) or dy/dx."
+  },
+  {
+    "id": "calc1Q6",
+    "front": "What is the Power Rule for differentiation?",
+    "back": "If f(x) = x^n, then f'(x) = n*x^(n-1)."
+  },
+  {
+    "id": "calc1Q7",
+    "front": "What is the difference between a secant line and a tangent line?",
+    "back": "A secant line intersects a curve at two points, while a tangent line touches a curve at exactly one point."
+  },
+  {
+    "id": "calc1Q8",
+    "front": "What is the formal definition of a derivative (limit definition)?",
+    "back": "The derivative of f(x) at x = c is defined as lim(h → 0) [f(c+h) - f(c)] / h."
+  },
+  {
+    "id": "calc1Q9",
+    "front": "What is the Squeeze Theorem?",
+    "back": "If f(x) ≤ g(x) ≤ h(x) and lim(x→c) f(x) = lim(x→c) h(x) = L, then lim(x→c) g(x) = L."
+  },
+  {
+    "id": "calc1Q10",
+    "front": "What is the limit of sin(x)/x as x approaches 0?",
+    "back": "The limit of sin(x)/x as x approaches 0 is 1."
+  }
+]
