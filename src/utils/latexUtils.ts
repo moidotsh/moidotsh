@@ -1,4 +1,6 @@
-export const splitMathText = (text: string) => {
+export const splitMathText = (text: string | undefined) => {
+  if (!text) return []; // Return an empty array if the text is undefined or null
+
   // Clean text by removing unwanted control characters like \u000c
   const cleanedText = text.replace(/[\u000c]/g, "");
 
@@ -7,13 +9,10 @@ export const splitMathText = (text: string) => {
 
   return parts.map((part) => {
     if (part.startsWith("\\(") && part.endsWith("\\)")) {
-      // Handle inline LaTeX
       return { type: "latex-inline", content: part.slice(2, -2) };
     } else if (part.startsWith("\\[") && part.endsWith("\\]")) {
-      // Handle block LaTeX
       return { type: "latex-block", content: part.slice(2, -2) };
     } else {
-      // Plain text
       return { type: "text", content: part };
     }
   });

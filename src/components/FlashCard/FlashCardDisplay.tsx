@@ -41,16 +41,18 @@ const FlashcardDisplay = ({
     return <div>Loading...</div>; // Render a loading state or nothing
   }
 
-  const handleOptionSelect = (index: number) => {
+  const handleOptionSelect = (index: number, originalIndex: number) => {
     setSelectedOption(index);
-    const isAnswerCorrect = index === flashcard.correctOptionIndex;
+
+    // Assume the first option (options[0]) is always the correct answer
+    const isAnswerCorrect = originalIndex === 0;
     setIsCorrect(isAnswerCorrect);
 
     if (!firstClickRecorded) {
       if (isAnswerCorrect) {
-        setCorrectAnswers((prevCorrect) => prevCorrect + 1); // Increment correct answers
+        setCorrectAnswers((prevCorrect) => prevCorrect + 1);
       } else {
-        setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1); // Increment incorrect answers
+        setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1);
       }
       setFirstClickRecorded(true);
     }
@@ -93,7 +95,6 @@ const FlashcardDisplay = ({
       {isMultipleChoice && (
         <MultipleChoiceOptions
           options={flashcard.options ?? []}
-          correctOptionIndex={flashcard.correctOptionIndex ?? -1} // Provide fallback value if undefined
           selectedOption={selectedOption}
           handleOptionSelect={handleOptionSelect}
         />

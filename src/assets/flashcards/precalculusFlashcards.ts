@@ -1,3 +1,4 @@
+// precalculusFlashcards.ts
 import { Flashcard } from "./flashcardTypes";
 
 export const precalculusFlashcards: Flashcard[] = [
@@ -18,8 +19,7 @@ export const precalculusFlashcards: Flashcard[] = [
   {
     id: "precalcTrigStep1",
     front: "Convert 45° to radians.",
-    options: ["π/4", "π/3", "π/2", "π/6"],
-    correctOptionIndex: 0, // 'π/4' is correct
+    options: ["π/4", "π/3", "π/2", "π/6"], // Correct answer 'π/4' is first
     nextQuestionId: "precalcTrigStep2",
     chapter: 4,
     unit: 1,
@@ -29,8 +29,7 @@ export const precalculusFlashcards: Flashcard[] = [
   {
     id: "precalcTrigStep2",
     front: "What is the cosine of 45° (or π/4)?",
-    options: ["1/2", "√3/2", "√2/2", "0"],
-    correctOptionIndex: 2, // '√2/2' is correct
+    options: ["√2/2", "1/2", "√3/2", "0"], // Correct answer '√2/2' is first
     nextQuestionId: "precalcTrigStep3",
     neverDisplayFirst: true, // This step should never display first
     chapter: 4,
@@ -41,8 +40,7 @@ export const precalculusFlashcards: Flashcard[] = [
   {
     id: "precalcTrigStep3",
     front: "What is the sine of 45° (or π/4)?",
-    options: ["1/2", "√2/2", "√3/2", "0"],
-    correctOptionIndex: 1, // '√2/2' is correct
+    options: ["√2/2", "1/2", "√3/2", "0"], // Correct answer '√2/2' is first
     nextQuestionId: "precalcTrigStep4",
     neverDisplayFirst: true, // This step should never display first
     chapter: 4,
@@ -53,8 +51,7 @@ export const precalculusFlashcards: Flashcard[] = [
   {
     id: "precalcTrigStep4",
     front: "What is the tangent of 45° (or π/4)?",
-    options: ["1", "√3", "1/2", "√3/2"],
-    correctOptionIndex: 0, // '1' is correct
+    options: ["1", "√3", "1/2", "√3/2"], // Correct answer '1' is first
     neverDisplayFirst: true, // This step should never display first
     chapter: 4,
     unit: 1,
@@ -64,8 +61,7 @@ export const precalculusFlashcards: Flashcard[] = [
   {
     id: "precalcTrigStep5",
     front: "Convert 30° to radians.",
-    options: ["π/6", "π/4", "π/3", "π/2"],
-    correctOptionIndex: 0, // 'π/6' is correct
+    options: ["π/6", "π/4", "π/3", "π/2"], // Correct answer 'π/6' is first
     nextQuestionId: "precalcTrigStep6",
     chapter: 4,
     unit: 1,
@@ -75,8 +71,7 @@ export const precalculusFlashcards: Flashcard[] = [
   {
     id: "precalcTrigStep6",
     front: "What is the cosine of 30° (or π/6)?",
-    options: ["√3/2", "1/2", "√2/2", "0"],
-    correctOptionIndex: 0, // '√3/2' is correct
+    options: ["√3/2", "1/2", "√2/2", "0"], // Correct answer '√3/2' is first
     nextQuestionId: "precalcTrigStep7",
     neverDisplayFirst: true, // This step should never display first
     chapter: 4,
@@ -87,8 +82,7 @@ export const precalculusFlashcards: Flashcard[] = [
   {
     id: "precalcTrigStep7",
     front: "What is the sine of 30° (or π/6)?",
-    options: ["√3/2", "1/2", "√2/2", "0"],
-    correctOptionIndex: 1, // '1/2' is correct
+    options: ["1/2", "√3/2", "√2/2", "0"], // Correct answer '1/2' is first
     nextQuestionId: "precalcTrigStep8",
     neverDisplayFirst: true, // This step should never display first
     chapter: 4,
@@ -99,8 +93,7 @@ export const precalculusFlashcards: Flashcard[] = [
   {
     id: "precalcTrigStep8",
     front: "What is the tangent of 30° (or π/6)?",
-    options: ["√3", "1/√3", "1", "√2/2"],
-    correctOptionIndex: 1, // '1/√3' is correct
+    options: ["1/√3", "√3", "1", "√2/2"], // Correct answer '1/√3' is first
     neverDisplayFirst: true, // This step should never display first
     chapter: 4,
     unit: 1,
@@ -116,8 +109,7 @@ export const precalculusFlashcards: Flashcard[] = [
       "\\( \\sin^2 x \\)",
       "\\( \\sin x \\)",
       "\\( 1 - \\cos^2 x \\)",
-    ],
-    correctOptionIndex: 0, // The correct answer is: sin x (1 - cos x)
+    ], // Correct answer is '\\( \\sin x (1 - \\cos x) \\)' and is first
     nextQuestionId: "verifyTrigStep2",
     chapter: 4,
     unit: 1,
@@ -133,8 +125,7 @@ export const precalculusFlashcards: Flashcard[] = [
       "\\( 1 + \\cos^2 x \\)",
       "\\( \\sin^2 x \\)",
       "\\( 2 \\)",
-    ],
-    correctOptionIndex: 0, // The correct answer is: 1 - cos^2 x
+    ], // Correct answer is '\\( 1 - \\cos^2 x \\)' and is first
     nextQuestionId: "verifyTrigStep3",
     neverDisplayFirst: true,
     chapter: 4,
@@ -151,8 +142,7 @@ export const precalculusFlashcards: Flashcard[] = [
       "\\( \\frac{1 - \\cos x}{\\sin^2 x} \\)",
       "\\( \\frac{\\sin^2 x}{\\sin x} \\)",
       "\\( \\frac{\\cos x}{\\sin x} \\)",
-    ],
-    correctOptionIndex: 0, // The correct answer is: sin x (1 - cos x) / sin^2 x
+    ], // Correct answer is '\\( \\frac{\\sin x (1 - \\cos x)}{\\sin^2 x} \\)' and is first
     nextQuestionId: "verifyTrigStep4",
     neverDisplayFirst: true,
     chapter: 4,
@@ -169,8 +159,7 @@ export const precalculusFlashcards: Flashcard[] = [
       "\\( \\sin x \\)",
       "\\( \\cos x \\)",
       "\\( \\frac{1}{\\sin x} \\)",
-    ],
-    correctOptionIndex: 0, // The correct answer is: (1 - cos x) / sin x
+    ], // Correct answer is '\\( \\frac{1 - \\cos x}{\\sin x} \\)' and is first
     neverDisplayFirst: true,
     chapter: 4,
     unit: 1,
@@ -186,27 +175,12 @@ export const precalculusFlashcards: Flashcard[] = [
       "The equation is incorrect",
       "Simplify further",
       "Multiply both sides by 2",
-    ],
-    correctOptionIndex: 0, // The identity is verified
+    ], // Correct answer is 'Identity verified' and is first
     neverDisplayFirst: true,
     chapter: 4,
     unit: 1,
     stepNumber: 5,
     totalSteps: 5,
-  },
-  {
-    id: "precalculusQ1",
-    front: "Define a function.",
-    back: "A relation where each input has a single output.",
-    chapter: 4,
-    unit: 1,
-  },
-  {
-    id: "precalculusQ2",
-    front: "What is the unit circle?",
-    back: "A circle with radius 1 centered at the origin.",
-    chapter: 4,
-    unit: 1,
   },
   {
     id: "precalculusQ3",
@@ -218,7 +192,7 @@ export const precalculusFlashcards: Flashcard[] = [
   {
     id: "precalculusQ4",
     front: "What is the period of the cosine function?",
-    back: "The period of the cosine function is (2pi).",
+    back: "The period of the cosine function is 2π.",
     chapter: 4,
     unit: 1,
   },

@@ -8,7 +8,6 @@
       "\\( \\sin x \\)",
       "\\( 1 - \\cos^2 x \\)"
     ],
-    "correctOptionIndex": 0,
     "nextQuestionId": "verifyTrigStep2",
     "stepNumber": 1,
     "totalSteps": 5
@@ -22,7 +21,6 @@
       "\\( \\sin^2 x \\)",
       "\\( 2 \\)"
     ],
-    "correctOptionIndex": 0,
     "nextQuestionId": "verifyTrigStep3",
     "neverDisplayFirst": true,
     "stepNumber": 2,
@@ -37,7 +35,6 @@
       "\\( \\frac{\\sin^2 x}{\\sin x} \\)",
       "\\( \\frac{\\cos x}{\\sin x} \\)"
     ],
-    "correctOptionIndex": 0,
     "nextQuestionId": "verifyTrigStep4",
     "neverDisplayFirst": true,
     "stepNumber": 3,
@@ -52,7 +49,6 @@
       "\\( \\cos x \\)",
       "\\( \\frac{1}{\\sin x} \\)"
     ],
-    "correctOptionIndex": 0,
     "neverDisplayFirst": true,
     "stepNumber": 4,
     "totalSteps": 5
@@ -66,7 +62,6 @@
       "Simplify further",
       "Multiply both sides by 2"
     ],
-    "correctOptionIndex": 0,
     "neverDisplayFirst": true,
     "stepNumber": 5,
     "totalSteps": 5
