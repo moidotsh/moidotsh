@@ -2,38 +2,26 @@
 
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 
-// Helper function to shuffle the flashcards array
-export const shuffleArray = (array: Flashcard[]): Flashcard[] => {
-  const allowedFirstCards = array.filter((card) => !card.neverDisplayFirst);
-  const firstCard =
-    allowedFirstCards.length > 0
-      ? allowedFirstCards[Math.floor(Math.random() * allowedFirstCards.length)]
-      : array[0];
-
-  const restCards = array
-    .filter((card) => card.id !== firstCard.id)
-    .sort(() => Math.random() - 0.5);
-
-  return [firstCard, ...restCards];
-};
-
-// Helper function to get flashcards based on selected category and folders
-export const getSelectedFlashcards = (
+// Function to fetch flashcards from the API based on the selected category and folders
+export const fetchFlashcardsFromAPI = async (
   selectedCategory: string,
   selectedFolders: string[],
-  flashcardCategories: any,
-): Flashcard[] => {
-  let selectedFlashcards: Flashcard[] = [];
+): Promise<Flashcard[]> => {
+  console.log("Fetching flashcards for: ", {
+    category: selectedCategory,
+    folders: selectedFolders,
+  });
 
-  if (selectedCategory === "Math") {
-    selectedFlashcards = selectedFolders.flatMap(
-      (folderName) => flashcardCategories.Math?.[folderName] || [],
-    );
-  } else if (selectedCategory === "Computer Science") {
-    selectedFlashcards = selectedFolders.flatMap(
-      (folderName) =>
-        flashcardCategories["Computer Science"]?.[folderName] || [],
-    );
+  const response = await fetch(
+    `/api/flashcards?category=${encodeURIComponent(
+      selectedCategory,
+    )}&folders=${encodeURIComponent(selectedFolders.join(","))}`,
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch flashcards.");
   }
-  return selectedFlashcards;
+
+  const flashcards = await response.json();
+  return flashcards;
 };

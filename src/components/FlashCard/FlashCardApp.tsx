@@ -7,6 +7,7 @@ import { useFlashcardStore } from "@/stores/flashcardStore";
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
 import FlashcardDisplay from "./FlashCardDisplay";
+import { fetchFlashcardsFromAPI } from "@/utils/flashcardUtils";
 
 const FlashcardApp = () => {
   const currentSelectedCategory = useFlashcardStore(
@@ -72,13 +73,22 @@ const FlashcardApp = () => {
     useFlashcardStore.getState().toggleFolderSelection(folderName);
   };
 
-  const startFlashcards = () => {
-    if (currentSelectedCategory) {
-      useFlashcardStore
-        .getState()
-        .startFlashcards(currentSelectedCategory, currentSelectedFolders);
-    } else {
-      console.error("Category not selected!");
+  const startFlashcards = async () => {
+    try {
+      const selectedCategory = useFlashcardStore.getState().selectedCategory;
+      const selectedFolders = useFlashcardStore.getState().selectedFolders;
+
+      if (selectedCategory && selectedFolders.length > 0) {
+        const flashcards = await fetchFlashcardsFromAPI(
+          selectedCategory,
+          selectedFolders,
+        );
+        useFlashcardStore.getState().setFlashcards(flashcards);
+      } else {
+        console.error("Please select a category and folders.");
+      }
+    } catch (error) {
+      console.error("Error loading flashcards:", error);
     }
   };
 

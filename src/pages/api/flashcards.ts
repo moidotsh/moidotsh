@@ -1,94 +1,73 @@
+// api/flashcards.ts
 import { NextApiRequest, NextApiResponse } from "next";
-import { readdir, readFile } from "fs/promises";
+import { readdirSync, readFileSync } from "fs";
 import path from "path";
+import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 
-// Define the flashcards directory path
-const flashcardsDir = path.join(
+// Base directory for flashcards
+const flashcardsBaseDir = path.join(
   process.cwd(),
-  "src/assets/flashcards/data/math/precalc/4/1",
+  "src/assets/flashcards/data", // This points to the location where your flashcards are stored
 );
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+// Utility function to load flashcards from a specific folder
+const loadFlashcardsFromFolder = (folderPath: string): Flashcard[] => {
+  const fullPath = path.join(flashcardsBaseDir, folderPath);
+  console.log(`Loading flashcards from: ${fullPath}`); // Add this line for debugging
+
+  const filesAndFolders = readdirSync(fullPath, { withFileTypes: true });
+  let flashcards: Flashcard[] = [];
+
+  filesAndFolders.forEach((entry) => {
+    const entryPath = path.join(fullPath, entry.name);
+
+    if (entry.isDirectory()) {
+      // If it's a directory, recursively load flashcards from it
+      flashcards.push(
+        ...loadFlashcardsFromFolder(path.join(folderPath, entry.name)),
+      );
+    } else if (entry.isFile() && entry.name.endsWith(".json")) {
+      // If it's a JSON file, load and parse the flashcards
+      const fileContent = readFileSync(entryPath, "utf8");
+      const parsedFlashcards = JSON.parse(fileContent);
+      console.log(`Parsed flashcards from ${entry.name}:`, parsedFlashcards); // Debugging log
+      flashcards.push(...parsedFlashcards);
+    }
+  });
+
+  return flashcards;
+};
+
+// The API handler
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    console.log("Attempting to read directory:", flashcardsDir);
+    const { category, folders } = req.query;
 
-    // Read all files in the directory
-    const files = await readdir(flashcardsDir);
-    console.log("Total files in directory:", files.length);
-    console.log("Files found in directory:", files);
+    // Ensure folders is an array
+    const foldersArray = Array.isArray(folders) ? folders : [folders];
 
-    let flashcards = [];
-    let skippedFiles = [];
-    let errorFiles = [];
+    let selectedFlashcards: Flashcard[] = [];
 
-    // Loop through each file in the directory
-    for (const file of files) {
-      console.log("Processing file:", file);
+    // Add a mapping for folder names
+    const folderMappings: { [key: string]: string } = {
+      "Pre-Calculus": "precalc", // Correct folder name
+      Algebra: "algebra",
+      "Calculus 1": "calc1",
+    };
 
-      if (file.endsWith(".json")) {
-        const filePath = path.join(flashcardsDir, file);
-        console.log("Attempting to read file:", filePath);
-
-        try {
-          // Read and parse the JSON file
-          const data = await readFile(filePath, "utf8");
-          console.log("File content for", file, ":", data);
-
-          // Check if JSON is valid and log any issues
-          let parsedData;
-          try {
-            parsedData = JSON.parse(data);
-          } catch (jsonError) {
-            console.error(
-              `JSON parse error in file ${file}:`,
-              jsonError.message,
-            );
-            errorFiles.push(file);
-            continue;
-          }
-
-          if (!Array.isArray(parsedData)) {
-            console.error(
-              `Invalid format (not an array) in file ${file}. Skipping.`,
-            );
-            errorFiles.push(file);
-            continue;
-          }
-
-          console.log(`Successfully parsed file ${file}:`, parsedData);
-
-          flashcards.push(...parsedData);
-        } catch (err) {
-          // Log error and continue with the rest of the files
-          console.error(`Error reading or parsing file ${file}:`, err.message);
-          errorFiles.push(file);
-          continue;
-        }
-      } else {
-        console.log(`Skipping non-JSON file: ${file}`);
-        skippedFiles.push(file);
-      }
+    if (category === "Math") {
+      // Use the folderMappings to translate folder names
+      selectedFlashcards = foldersArray.flatMap((folderName) =>
+        loadFlashcardsFromFolder(
+          `math/${folderMappings[folderName as string]?.toLowerCase() || folderName?.toLowerCase()}`,
+        ),
+      );
     }
+    console.log("Selected flashcards:", selectedFlashcards); // Check if any flashcards are being loaded
 
-    // Log skipped and error files for debugging
-    console.log("Skipped non-JSON files:", skippedFiles);
-    console.log("Files with errors:", errorFiles);
-
-    // If no flashcards were loaded
-    if (flashcards.length === 0) {
-      throw new Error("No valid flashcards found in directory.");
-    }
-
-    console.log("Final flashcards array:", flashcards);
-    res.status(200).json(flashcards);
+    res.status(200).json(selectedFlashcards);
   } catch (error) {
-    // Provide detailed error output
-    console.error("Error in /api/flashcards handler:", error.message);
-    res
-      .status(500)
-      .json({ error: `Failed to load flashcards: ${error.message}` });
+    console.error("Error loading flashcards:", error);
+    res.status(500).json({ error: "Failed to load flashcards." });
   }
 }

@@ -1,7 +1,20 @@
 // flashcardStore.ts
 import { create } from "zustand";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
-import { shuffleArray } from "@/utils/flashcardUtils";
+import { flashcardCategories } from "@/assets/flashcards/flashcardCategories";
+import { fetchFlashcardsFromAPI } from "@/utils/flashcardUtils";
+
+type FlashcardCategories = {
+  Math: {
+    Algebra: string;
+    "Pre-Calculus": string;
+    "Calculus 1": string;
+  };
+  "Computer Science": {
+    "Data Structures": string;
+    Algorithms: string;
+  };
+};
 
 type FlashcardState = {
   flashcards: Flashcard[];
@@ -156,16 +169,31 @@ export const useFlashcardStore = create<FlashcardState>((set) => ({
 
   startFlashcards: async () => {
     try {
-      const selectedFlashcards = await loadFlashcardsFromAPI();
-      const shuffledFlashcards = shuffleArray(selectedFlashcards);
-      set({
-        flashcards: shuffledFlashcards,
-        index: 0,
-        completedFlashcards: [],
-        correctAnswers: 0,
-        incorrectAnswers: 0,
-        totalQuestions: shuffledFlashcards.length,
-      });
+      const selectedCategory = useFlashcardStore.getState().selectedCategory;
+      const selectedFolders = useFlashcardStore.getState().selectedFolders;
+
+      if (selectedCategory && selectedFolders.length > 0) {
+        const folderPaths = selectedFolders.map((folder) =>
+          flashcardCategories[selectedCategory][
+            folder as keyof (typeof flashcardCategories)[selectedCategory]
+          ]
+            ? flashcardCategories[selectedCategory][
+                folder as keyof (typeof flashcardCategories)[selectedCategory]
+              ]
+            : folder,
+        );
+
+        console.log("Starting flashcards for category:", selectedCategory);
+        console.log("With folders:", folderPaths);
+
+        const flashcards = await fetchFlashcardsFromAPI(
+          selectedCategory,
+          folderPaths,
+        );
+        useFlashcardStore.getState().setFlashcards(flashcards);
+      } else {
+        console.error("Please select a category and folders.");
+      }
     } catch (error) {
       console.error("Error starting flashcards:", error);
     }
