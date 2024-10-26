@@ -1,14 +1,11 @@
 // src/stores/flashcard/navigationStore.ts
 import { create } from "zustand";
-import { flashcardCategories } from "@/assets/flashcards/flashcardCategories";
+import { Category } from "@/assets/flashcards/flashcardCategories";
 
 interface NavigationState {
-  selectedCategory: string | null;
+  selectedCategory: Category | null;
   selectedFolders: string[];
-
-  // Actions
-  setSelectedCategory: (category: string | null) => void;
-  setSelectedFolders: (folders: string[]) => void;
+  setSelectedCategory: (category: Category | null) => void;
   toggleFolderSelection: (folderName: string) => void;
   resetNavigation: () => void;
 }
@@ -20,10 +17,8 @@ export const useNavigationStore = create<NavigationState>((set) => ({
   setSelectedCategory: (category) =>
     set({
       selectedCategory: category,
-      selectedFolders: [], // Reset folders when category changes
+      selectedFolders: [],
     }),
-
-  setSelectedFolders: (folders) => set({ selectedFolders: folders }),
 
   toggleFolderSelection: (folderName) =>
     set((state) => ({

@@ -2,7 +2,10 @@
 import React, { useEffect } from "react";
 import withAppTemplate from "../withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
-import { flashcardCategories } from "@/assets/flashcards/flashcardCategories";
+import {
+  flashcardCategories,
+  Category,
+} from "@/assets/flashcards/flashcardCategories";
 import CategorySelector from "./CategorySelector";
 import FolderSelector from "./FolderSelector";
 import FlashcardDisplay from "./FlashCardDisplay";
@@ -112,10 +115,15 @@ const FlashcardApp = () => {
   }
 
   // Show folder selection
-  if (deck.length === 0) {
+  if (deck.length === 0 && selectedCategory) {
+    const category = selectedCategory as Category;
+    const folders = flashcardCategories[category]
+      ? Object.keys(flashcardCategories[category])
+      : [];
+
     return (
       <FolderSelector
-        folders={Object.keys(flashcardCategories[selectedCategory])}
+        folders={folders}
         selectedFolders={selectedFolders}
         onToggleFolderSelection={toggleFolderSelection}
         onStart={startFlashcards}

@@ -1,23 +1,19 @@
-type FlashcardCategories = {
-  Math: {
-    Algebra: string;
-    "Pre-Calculus": string;
-    "Calculus 1": string;
-  };
-  "Computer Science": {
-    "Data Structures": string;
-    Algorithms: string;
-  };
+// src/assets/flashcards/flashcardCategories.ts
+
+export type Category = "Math"; // Add as needed with |
+
+export type FlashcardSubcategories = {
+  [key: string]: string;
+};
+
+export type FlashcardCategories = {
+  [K in Category]: FlashcardSubcategories;
 };
 
 export const flashcardCategories: FlashcardCategories = {
   Math: {
-    Algebra: "algebra",
     "Pre-Calculus": "precalc",
-    "Calculus 1": "calc1",
+    // Algebra: "algebra",
+    // "Calculus 1": "calc1",
   },
-  "Computer Science": {
-    "Data Structures": "data-structures",
-    Algorithms: "algorithms",
-  },
-};
+} as const;
