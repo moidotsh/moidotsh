@@ -51,7 +51,6 @@ const FlashcardApp = ({
     getDeckStatus,
   } = useCardStore();
 
-  const progress = useCardStore((state) => state.getProgress());
   const { cardsInCurrentSession, totalCardsInSession } = useCardStore(
     (state) => ({
       cardsInCurrentSession: state.sessionProgress,

@@ -28,6 +28,15 @@ interface CardState {
     hasNext: boolean;
     hasPrevious: boolean;
   };
+
+  getProgress: () => {
+    currentSession: number;
+    cardsInCurrentSession: number;
+    totalCardsInSession: number;
+    totalCardsOverall: number;
+    completedCards: number;
+  };
+  setCardsPerSession: (number: number) => void;
 }
 
 export const useCardStore = create<CardState>((set, get) => ({
