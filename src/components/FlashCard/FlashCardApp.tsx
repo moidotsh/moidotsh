@@ -51,6 +51,14 @@ const FlashcardApp = ({
     getDeckStatus,
   } = useCardStore();
 
+  const progress = useCardStore((state) => state.getProgress());
+  const { cardsInCurrentSession, totalCardsInSession } = useCardStore(
+    (state) => ({
+      cardsInCurrentSession: state.sessionProgress,
+      totalCardsInSession: state.cardsPerSession,
+    }),
+  );
+
   useEffect(() => {
     if (setDynamicTitle) {
       const MAX_LIVES = 3;
@@ -69,16 +77,28 @@ const FlashcardApp = ({
           }),
         );
 
+      const progressText = `${cardsInCurrentSession}/${totalCardsInSession}`;
+
       const titleElement = React.createElement(
         "div",
-        { style: { display: "flex", alignItems: "center" } },
+        { style: { display: "flex", alignItems: "center", gap: "8px" } },
         React.createElement("span", null, "Flashcards"),
+        React.createElement(
+          "span",
+          { style: { fontSize: "0.8em", opacity: 0.8 } },
+          `(${progressText})`,
+        ),
         ...hearts,
       );
 
       setDynamicTitle(titleElement);
     }
-  }, [incorrectAnswers, setDynamicTitle]);
+  }, [
+    incorrectAnswers,
+    cardsInCurrentSession,
+    totalCardsInSession,
+    setDynamicTitle,
+  ]);
 
   const setTitle = useVisibilityStore((state) => state.setBrowserTitle);
 
