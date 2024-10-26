@@ -1,0 +1,87 @@
+[
+  {
+    "id": "unit_circle_equation",
+    "front": "What is the equation of the unit circle?",
+    "options": [
+      "\\( x^2 + y^2 = 1 \\)",
+      "\\( x^2 + y^2 = 2 \\)",
+      "\\( x^2 - y^2 = 1 \\)",
+      "\\( x + y = 1 \\)"
+    ]
+  },
+  {
+    "id": "unit_circle_coordinates",
+    "front": "What are the coordinates of any point on the unit circle?",
+    "options": [
+      "\\( (\\cos(t), \\sin(t)) \\)",
+      "\\( (\\sin(t), \\cos(t)) \\)",
+      "\\( (\\tan(t), \\sec(t)) \\)",
+      "\\( (1, t) \\)"
+    ]
+  },
+  {
+    "id": "sine_cosine_coords",
+    "front": "On the unit circle, what do x and y coordinates represent?",
+    "options": [
+      "x = cos(t), y = sin(t)",
+      "x = sin(t), y = cos(t)",
+      "x = tan(t), y = sec(t)",
+      "x = t, y = 1"
+    ]
+  },
+  {
+    "id": "coterminal_angles",
+    "front": "How do you find coterminal angles?",
+    "options": [
+      "\\( \\theta + 2k\\pi \\), where k is any integer",
+      "\\( \\theta + k\\pi \\), where k is any integer",
+      "\\( \\theta + \\frac{\\pi}{2} \\), where k is any integer",
+      "\\( \\theta + 360 \\), where k is any integer"
+    ]
+  },
+  {
+    "id": "trig_periodicity",
+    "front": "What is the period of sine and cosine?",
+    "options": [
+      "\\( 2\\pi \\)",
+      "\\( \\pi \\)",
+      "\\( \\frac{\\pi}{2} \\)",
+      "\\( 4\\pi \\)"
+    ]
+  },
+  {
+    "id": "reference_angle",
+    "front": "What is a reference angle?",
+    "back": "The acute angle formed by the terminal side of an angle and the x-axis."
+  },
+  {
+    "id": "trig_signs_quadrants",
+    "front": "In which quadrants are sine and cosine positive?",
+    "options": [
+      "Sine: Q1,Q2; Cosine: Q1,Q4",
+      "Sine: Q1,Q4; Cosine: Q1,Q2",
+      "Sine: Q1,Q3; Cosine: Q2,Q4",
+      "Sine: Q2,Q4; Cosine: Q1,Q3"
+    ]
+  },
+  {
+    "id": "unit_circle_symmetry",
+    "front": "If point P(x,y) is on unit circle at angle t, what's at -t?",
+    "options": ["P(x,-y)", "P(-x,y)", "P(-x,-y)", "P(y,x)"]
+  },
+  {
+    "id": "special_angle_values",
+    "front": "What is sin(π/6) and cos(π/6)?",
+    "options": [
+      "\\( \\sin(\\frac{\\pi}{6})=\\frac{1}{2}, \\cos(\\frac{\\pi}{6})=\\frac{\\sqrt{3}}{2} \\)",
+      "\\( \\sin(\\frac{\\pi}{6})=\\frac{\\sqrt{3}}{2}, \\cos(\\frac{\\pi}{6})=\\frac{1}{2} \\)",
+      "\\( \\sin(\\frac{\\pi}{6})=\\frac{1}{2}, \\cos(\\frac{\\pi}{6})=\\frac{1}{2} \\)",
+      "\\( \\sin(\\frac{\\pi}{6})=1, \\cos(\\frac{\\pi}{6})=0 \\)"
+    ]
+  },
+  {
+    "id": "unit_circle_radius",
+    "front": "Why is it called the unit circle?",
+    "back": "Because its radius is 1 unit."
+  }
+]

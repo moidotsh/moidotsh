@@ -1,36 +1,19 @@
-// flashcardCategories.ts
+// src/assets/flashcards/flashcardCategories.ts
 
-import { algebraFlashcards } from "./algebraFlashcards";
-import { precalculusFlashcards } from "./precalculusFlashcards";
-import { calculusFlashcards } from "./calculusFlashcards";
-import { dataStructuresFlashcards } from "./datastructuresFlashcards";
-import { algorithmsFlashcards } from "./algorithmsFlashcards";
-import { Flashcard } from "./flashcardTypes";
+export type Category = "Math"; // Add as needed with |
 
-// Define the structure for Math and Computer Science categories
-export type MathCategory = {
-  Algebra: Flashcard[];
-  "Pre-Calculus": Flashcard[];
-  "Calculus 1": Flashcard[];
+export type FlashcardSubcategories = {
+  [key: string]: string;
 };
 
-export type ComputerScienceCategory = {
-  "Data Structures": Flashcard[];
-  Algorithms: Flashcard[];
+export type FlashcardCategories = {
+  [K in Category]: FlashcardSubcategories;
 };
 
-// Export the flashcard categories and types
-export const flashcardCategories: {
-  Math: MathCategory;
-  "Computer Science": ComputerScienceCategory;
-} = {
+export const flashcardCategories: FlashcardCategories = {
   Math: {
-    Algebra: algebraFlashcards,
-    "Pre-Calculus": precalculusFlashcards,
-    "Calculus 1": calculusFlashcards,
+    "Pre-Calculus": "precalc",
+    // Algebra: "algebra",
+    // "Calculus 1": "calc1",
   },
-  "Computer Science": {
-    "Data Structures": dataStructuresFlashcards,
-    Algorithms: algorithmsFlashcards,
-  },
-};
+} as const;

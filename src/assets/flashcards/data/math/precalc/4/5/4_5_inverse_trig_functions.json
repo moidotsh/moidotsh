@@ -1,0 +1,77 @@
+[
+  {
+    "id": "arcsin_definition",
+    "front": "What is \\(\\sin^{-1}(x)\\) or \\(\\arcsin(x)\\)?",
+    "options": [
+      "The angle whose sine is x, in range [-π/2,π/2]",
+      "The angle whose sine is x, in range [0,π]",
+      "The angle whose sine is x, in range [-π,π]",
+      "The angle whose sine is x, in range [0,2π]"
+    ]
+  },
+  {
+    "id": "inverse_sine_domain_range",
+    "front": "What is the domain and range of \\(\\arcsin(x)\\)?",
+    "options": [
+      "Domain: [-1,1], Range: [-π/2,π/2]",
+      "Domain: [-1,1], Range: [0,π]",
+      "Domain: (-∞,∞), Range: [-π/2,π/2]",
+      "Domain: [-1,1], Range: [-π,π]"
+    ]
+  },
+  {
+    "id": "inverse_cosine_domain_range",
+    "front": "What is the domain and range of \\(\\arccos(x)\\)?",
+    "options": [
+      "Domain: [-1,1], Range: [0,π]",
+      "Domain: [-1,1], Range: [-π/2,π/2]",
+      "Domain: (-∞,∞), Range: [0,π]",
+      "Domain: [-1,1], Range: [0,2π]"
+    ]
+  },
+  {
+    "id": "inverse_tangent_domain_range",
+    "front": "What is the domain and range of \\(\\arctan(x)\\)?",
+    "options": [
+      "Domain: (-∞,∞), Range: (-π/2,π/2)",
+      "Domain: [-1,1], Range: [-π/2,π/2]",
+      "Domain: (-∞,∞), Range: [0,π]",
+      "Domain: [-1,1], Range: [0,π]"
+    ]
+  },
+  {
+    "id": "arcsin_negative_half",
+    "front": "What is \\(\\sin^{-1}(-\\frac{1}{2})\\)?",
+    "options": ["-π/6", "π/6", "-π/3", "π/3"]
+  },
+  {
+    "id": "arccos_half",
+    "front": "What is \\(\\cos^{-1}(\\frac{1}{2})\\)?",
+    "options": ["π/3", "π/6", "π/4", "π/2"]
+  },
+  {
+    "id": "arctan_one",
+    "front": "What is \\(\\tan^{-1}(1)\\)?",
+    "options": ["π/4", "π/6", "π/3", "π/2"]
+  },
+  {
+    "id": "inverse_sine_sine",
+    "front": "What is \\(\\sin^{-1}(\\sin(\\frac{\\pi}{4}))\\)?",
+    "options": ["π/4", "-π/4", "3π/4", "5π/4"]
+  },
+  {
+    "id": "inverse_cosine_cosine",
+    "front": "What is \\(\\cos^{-1}(\\cos(\\frac{2\\pi}{3}))\\)?",
+    "options": ["π/3", "2π/3", "4π/3", "5π/3"]
+  },
+  {
+    "id": "composition_arctangent",
+    "front": "What is \\(\\cos(\\tan^{-1}(\\frac{3}{4}))\\)?",
+    "options": [
+      "\\(\\frac{4}{5}\\)",
+      "\\(\\frac{3}{5}\\)",
+      "\\(\\frac{5}{4}\\)",
+      "\\(\\frac{3}{4}\\)"
+    ]
+  }
+]

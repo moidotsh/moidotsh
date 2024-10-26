@@ -1,39 +1,33 @@
-// flashcardUtils.ts
-
+// src/utils/flashcardUtils.ts
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
 
-// Helper function to shuffle the flashcards array
-export const shuffleArray = (array: Flashcard[]): Flashcard[] => {
-  const allowedFirstCards = array.filter((card) => !card.neverDisplayFirst);
-  const firstCard =
-    allowedFirstCards.length > 0
-      ? allowedFirstCards[Math.floor(Math.random() * allowedFirstCards.length)]
-      : array[0];
-
-  const restCards = array
-    .filter((card) => card.id !== firstCard.id)
-    .sort(() => Math.random() - 0.5);
-
-  return [firstCard, ...restCards];
-};
-
-// Helper function to get flashcards based on selected category and folders
-export const getSelectedFlashcards = (
+export const fetchFlashcardsFromAPI = async (
   selectedCategory: string,
   selectedFolders: string[],
-  flashcardCategories: any,
-): Flashcard[] => {
-  let selectedFlashcards: Flashcard[] = [];
+): Promise<Flashcard[]> => {
+  console.log("Fetching flashcards for: ", {
+    category: selectedCategory,
+    folders: selectedFolders,
+  });
 
-  if (selectedCategory === "Math") {
-    selectedFlashcards = selectedFolders.flatMap(
-      (folderName) => flashcardCategories.Math?.[folderName] || [],
-    );
-  } else if (selectedCategory === "Computer Science") {
-    selectedFlashcards = selectedFolders.flatMap(
-      (folderName) =>
-        flashcardCategories["Computer Science"]?.[folderName] || [],
-    );
+  try {
+    const queryString = new URLSearchParams({
+      category: selectedCategory,
+      folders: selectedFolders.join(","),
+    }).toString();
+
+    const response = await fetch(`/api/flashcards?${queryString}`);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to fetch flashcards");
+    }
+
+    const flashcards = await response.json();
+    console.log(`Received ${flashcards.length} flashcards from API`);
+    return flashcards;
+  } catch (error) {
+    console.error("Error fetching flashcards:", error);
+    throw error;
   }
-  return selectedFlashcards;
 };

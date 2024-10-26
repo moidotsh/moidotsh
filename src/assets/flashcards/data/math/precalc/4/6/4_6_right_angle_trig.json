@@ -1,0 +1,102 @@
+[
+  {
+    "id": "sine_ratio",
+    "front": "In a right triangle, what is \\(\\sin(\\theta)\\)?",
+    "options": [
+      "\\(\\frac{\\text{opposite}}{\\text{hypotenuse}}\\)",
+      "\\(\\frac{\\text{adjacent}}{\\text{hypotenuse}}\\)",
+      "\\(\\frac{\\text{opposite}}{\\text{adjacent}}\\)",
+      "\\(\\frac{\\text{hypotenuse}}{\\text{opposite}}\\)"
+    ]
+  },
+  {
+    "id": "cosine_ratio",
+    "front": "In a right triangle, what is \\(\\cos(\\theta)\\)?",
+    "options": [
+      "\\(\\frac{\\text{adjacent}}{\\text{hypotenuse}}\\)",
+      "\\(\\frac{\\text{opposite}}{\\text{hypotenuse}}\\)",
+      "\\(\\frac{\\text{opposite}}{\\text{adjacent}}\\)",
+      "\\(\\frac{\\text{hypotenuse}}{\\text{adjacent}}\\)"
+    ]
+  },
+  {
+    "id": "tangent_ratio",
+    "front": "In a right triangle, what is \\(\\tan(\\theta)\\)?",
+    "options": [
+      "\\(\\frac{\\text{opposite}}{\\text{adjacent}}\\)",
+      "\\(\\frac{\\text{adjacent}}{\\text{opposite}}\\)",
+      "\\(\\frac{\\text{opposite}}{\\text{hypotenuse}}\\)",
+      "\\(\\frac{\\text{adjacent}}{\\text{hypotenuse}}\\)"
+    ]
+  },
+  {
+    "id": "cosecant_ratio",
+    "front": "What is \\(\\csc(\\theta)\\) in terms of sides?",
+    "options": [
+      "\\(\\frac{\\text{hypotenuse}}{\\text{opposite}}\\)",
+      "\\(\\frac{\\text{hypotenuse}}{\\text{adjacent}}\\)",
+      "\\(\\frac{\\text{adjacent}}{\\text{opposite}}\\)",
+      "\\(\\frac{\\text{opposite}}{\\text{hypotenuse}}\\)"
+    ]
+  },
+  {
+    "id": "secant_ratio",
+    "front": "What is \\(\\sec(\\theta)\\) in terms of sides?",
+    "options": [
+      "\\(\\frac{\\text{hypotenuse}}{\\text{adjacent}}\\)",
+      "\\(\\frac{\\text{hypotenuse}}{\\text{opposite}}\\)",
+      "\\(\\frac{\\text{adjacent}}{\\text{opposite}}\\)",
+      "\\(\\frac{\\text{adjacent}}{\\text{hypotenuse}}\\)"
+    ]
+  },
+  {
+    "id": "cotangent_ratio",
+    "front": "What is \\(\\cot(\\theta)\\) in terms of sides?",
+    "options": [
+      "\\(\\frac{\\text{adjacent}}{\\text{opposite}}\\)",
+      "\\(\\frac{\\text{opposite}}{\\text{adjacent}}\\)",
+      "\\(\\frac{\\text{hypotenuse}}{\\text{opposite}}\\)",
+      "\\(\\frac{\\text{hypotenuse}}{\\text{adjacent}}\\)"
+    ]
+  },
+  {
+    "id": "complementary_angles",
+    "front": "If θ and α are complementary angles, what is \\(\\sin(\\theta)\\) equal to?",
+    "options": [
+      "\\(\\cos(\\alpha)\\)",
+      "\\(\\sin(\\alpha)\\)",
+      "\\(\\tan(\\alpha)\\)",
+      "\\(\\cot(\\alpha)\\)"
+    ]
+  },
+  {
+    "id": "find_height",
+    "front": "To find height using angle of elevation θ and distance d, use:",
+    "options": [
+      "\\(h = d \\tan(\\theta)\\)",
+      "\\(h = d \\sin(\\theta)\\)",
+      "\\(h = d \\cos(\\theta)\\)",
+      "\\(h = d \\csc(\\theta)\\)"
+    ]
+  },
+  {
+    "id": "hypotenuse_calc",
+    "front": "Given sides a and b, how do you find hypotenuse h?",
+    "options": [
+      "\\(h = \\sqrt{a^2 + b^2}\\)",
+      "\\(h = a^2 + b^2\\)",
+      "\\(h = \\sqrt{a + b}\\)",
+      "\\(h = \\frac{a + b}{2}\\)"
+    ]
+  },
+  {
+    "id": "angle_calc",
+    "front": "To find angle θ given opposite (o) and adjacent (a) sides, use:",
+    "options": [
+      "\\(\\theta = \\tan^{-1}(\\frac{o}{a})\\)",
+      "\\(\\theta = \\sin^{-1}(\\frac{o}{a})\\)",
+      "\\(\\theta = \\cos^{-1}(\\frac{o}{a})\\)",
+      "\\(\\theta = \\cot^{-1}(\\frac{o}{a})\\)"
+    ]
+  }
+]

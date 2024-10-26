@@ -1,0 +1,97 @@
+[
+  {
+    "id": "basic_sine_graph",
+    "front": "Basic sine function y = sin(x) characteristics:",
+    "options": [
+      "Starts at (0,0), period 2π, range [-1,1]",
+      "Starts at (0,1), period π, range [-1,1]",
+      "Starts at (0,0), period π, range [-2,2]",
+      "Starts at (0,0), period 2π, range [0,1]"
+    ]
+  },
+  {
+    "id": "basic_cosine_graph",
+    "front": "Basic cosine function y = cos(x) characteristics:",
+    "options": [
+      "Starts at (0,1), period 2π, range [-1,1]",
+      "Starts at (0,0), period 2π, range [-1,1]",
+      "Starts at (1,0), period π, range [-1,1]",
+      "Starts at (0,1), period π, range [0,2]"
+    ]
+  },
+  {
+    "id": "transformation_formula",
+    "front": "In y = a sin[b(x - c)] + d, what does each letter represent?",
+    "options": [
+      "a: amplitude, b: period(2π/|b|), c: horizontal shift, d: vertical shift",
+      "a: period, b: amplitude, c: vertical shift, d: horizontal shift",
+      "a: vertical shift, b: horizontal shift, c: amplitude, d: period",
+      "a: horizontal shift, b: vertical shift, c: period, d: amplitude"
+    ]
+  },
+  {
+    "id": "amplitude_effect",
+    "front": "How does 'a' affect y = a sin(x)?",
+    "options": [
+      "Changes height to |a| units from midline",
+      "Changes period to a units",
+      "Shifts graph right a units",
+      "Shifts graph up a units"
+    ]
+  },
+  {
+    "id": "period_calculation",
+    "front": "For y = sin(bx), how do you find the period?",
+    "options": [
+      "\\( \\frac{2\\pi}{|b|} \\)",
+      "\\( 2\\pi b \\)",
+      "\\( \\frac{\\pi}{b} \\)",
+      "\\( b\\pi \\)"
+    ]
+  },
+  {
+    "id": "horizontal_shift",
+    "front": "In y = sin(x - c), which way does the graph shift?",
+    "options": ["Right c units", "Left c units", "Up c units", "Down c units"]
+  },
+  {
+    "id": "vertical_shift",
+    "front": "In y = sin(x) + d, how does d affect the graph?",
+    "options": [
+      "Shifts the midline to y = d",
+      "Changes the amplitude to d",
+      "Changes the period to d",
+      "Shifts the graph right d units"
+    ]
+  },
+  {
+    "id": "negative_coefficient",
+    "front": "What happens when a is negative in y = a sin(x)?",
+    "options": [
+      "Graph is reflected over x-axis",
+      "Graph is reflected over y-axis",
+      "Graph shifts left",
+      "Graph shifts down"
+    ]
+  },
+  {
+    "id": "identify_transformations",
+    "front": "In y = 2sin(3x - π) + 1, identify period and shifts:",
+    "options": [
+      "Period: 2π/3, right π/3, up 1",
+      "Period: 3π, right π, up 2",
+      "Period: π/3, left π, up 1",
+      "Period: 2π, right π, up 2"
+    ]
+  },
+  {
+    "id": "graph_order",
+    "front": "What's the correct order to apply transformations?",
+    "options": [
+      "Period, amplitude, horizontal shift, vertical shift",
+      "Amplitude, period, vertical shift, horizontal shift",
+      "Horizontal shift, vertical shift, period, amplitude",
+      "Vertical shift, horizontal shift, amplitude, period"
+    ]
+  }
+]
