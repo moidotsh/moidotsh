@@ -1,5 +1,5 @@
 // src/components/FlashCard/FlashCardApp.tsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import withAppTemplate from "../withAppTemplate";
 import { useVisibilityStore } from "@/stores/visibilityStore";
 import {
@@ -14,8 +14,13 @@ import {
   useProgressStore,
   useCardStore,
 } from "@/stores/flashcard";
+import { Heart } from "react-feather";
 
-const FlashcardApp = () => {
+const FlashcardApp = ({
+  setDynamicTitle,
+}: {
+  setDynamicTitle?: (title: JSX.Element) => void;
+}) => {
   const {
     selectedCategory,
     selectedFolders,
@@ -45,6 +50,35 @@ const FlashcardApp = () => {
     resetDeck,
     getDeckStatus,
   } = useCardStore();
+
+  useEffect(() => {
+    if (setDynamicTitle) {
+      const MAX_LIVES = 3;
+      const hearts = Array(MAX_LIVES)
+        .fill(0)
+        .map((_, index) =>
+          React.createElement(Heart, {
+            key: index,
+            size: 16,
+            style: {
+              marginLeft: "4px",
+              display: "inline",
+              fill: index < MAX_LIVES - incorrectAnswers ? "red" : "black",
+              color: index < MAX_LIVES - incorrectAnswers ? "red" : "black",
+            },
+          }),
+        );
+
+      const titleElement = React.createElement(
+        "div",
+        { style: { display: "flex", alignItems: "center" } },
+        React.createElement("span", null, "Flashcards"),
+        ...hearts,
+      );
+
+      setDynamicTitle(titleElement);
+    }
+  }, [incorrectAnswers, setDynamicTitle]);
 
   const setTitle = useVisibilityStore((state) => state.setBrowserTitle);
 
@@ -152,9 +186,4 @@ const FlashcardApp = () => {
   );
 };
 
-export default withAppTemplate(
-  FlashcardApp,
-  "Flashcards",
-  () => <h1>Flashcards</h1>,
-  true,
-);
+export default withAppTemplate(FlashcardApp, "Flashcards", undefined, true);
