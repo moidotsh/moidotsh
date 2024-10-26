@@ -75,7 +75,7 @@ const FlashcardApp = () => {
     return (
       <div className="flex flex-col text-center items-center justify-center h-full w-full">
         <h1>
-          You've completed the deck with{" "}
+          You&#39ve completed the deck with{" "}
           <span className="bg-green-200 p-0.5">
             {correctAnswers} out of {displayableTotal}
           </span>{" "}
