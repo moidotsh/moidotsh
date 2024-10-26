@@ -131,7 +131,7 @@ const FlashcardApp = ({
     return (
       <div className="flex flex-col text-center items-center justify-center h-full w-full">
         <h1>
-          You&#39ve completed the deck with{" "}
+          You{"'"}ve completed the deck with{" "}
           <span className="bg-green-200 p-0.5">
             {correctAnswers} out of {displayableTotal}
           </span>{" "}
@@ -141,7 +141,7 @@ const FlashcardApp = ({
           className="mt-4 p-2 bg-green-500 text-white rounded"
           onClick={handleRestartDeck}
         >
-          Restart Deck
+          Shuffle Deck
         </button>
       </div>
     );

@@ -1,11 +1,13 @@
-// src/stores/flashcard/progressStore.ts
 import { create } from "zustand";
+
+const MAX_LIVES = 3; // Define max lives constant
 
 interface ProgressState {
   correctAnswers: number;
   incorrectAnswers: number;
   completedCards: Set<string>;
   displayableTotal: number;
+  livesLeft: number;
 
   markCorrect: (cardId: string) => void;
   markIncorrect: (cardId: string) => void;
@@ -13,6 +15,7 @@ interface ProgressState {
   setDisplayableTotal: (total: number) => void;
   resetProgress: () => void;
   isCardCompleted: (cardId: string) => boolean;
+  hasLivesLeft: () => boolean;
 }
 
 export const useProgressStore = create<ProgressState>((set, get) => ({
@@ -20,6 +23,7 @@ export const useProgressStore = create<ProgressState>((set, get) => ({
   incorrectAnswers: 0,
   completedCards: new Set<string>(),
   displayableTotal: 0,
+  livesLeft: MAX_LIVES,
 
   markCorrect: (cardId: string) =>
     set((state) => {
@@ -37,9 +41,11 @@ export const useProgressStore = create<ProgressState>((set, get) => ({
     set((state) => {
       if (!state.completedCards.has(cardId)) {
         const newCompleted = new Set(state.completedCards).add(cardId);
+        const newLivesLeft = state.livesLeft - 1;
         return {
           incorrectAnswers: state.incorrectAnswers + 1,
           completedCards: newCompleted,
+          livesLeft: newLivesLeft,
         };
       }
       return state;
@@ -58,7 +64,10 @@ export const useProgressStore = create<ProgressState>((set, get) => ({
       incorrectAnswers: 0,
       completedCards: new Set(),
       displayableTotal: 0,
+      livesLeft: MAX_LIVES,
     }),
 
   isCardCompleted: (cardId: string) => get().completedCards.has(cardId),
+
+  hasLivesLeft: () => get().livesLeft > 0,
 }));
