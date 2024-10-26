@@ -10,7 +10,7 @@ type Props = {
 };
 
 const withAppTemplate = <P extends object>(
-  WrappedComponent: React.FC<P>,
+  WrappedComponent: React.ComponentType<P>, // Changed from FC to ComponentType
   appName: string,
   getDynamicTitle?: (router: NextRouter) => JSX.Element,
   fullSize: boolean = false,
