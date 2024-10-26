@@ -29,10 +29,14 @@ const loadAllFlashcardsFromSubject = (basePath: string): Flashcard[] => {
 
           // Add source file and path information
           const relativePath = path.relative(fullPath, dirPath);
-          cards.forEach((card: Flashcard) => {
-            card._sourceFile = entry.name;
-            card._sourcePath = relativePath;
-          });
+          cards.forEach(
+            (
+              card: Flashcard & { _sourceFile?: string; _sourcePath?: string },
+            ) => {
+              card._sourceFile = entry.name;
+              card._sourcePath = relativePath;
+            },
+          );
 
           // Handle chain files
           if (entry.name.startsWith("chain_")) {
