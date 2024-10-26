@@ -1,13 +1,9 @@
-//_app.tsx
-import AppDock from "@/components/AppDock";
-import BrowserApp from "@/components/BrowserApp";
-import FlashCardApp from "@/components/FlashCard/FlashCardApp";
-import MusicApp from "@/components/MusicApp";
-import NavApp from "@/components/NavApp";
-import TerminalApp from "@/components/TerminalApp";
 import "@/styles/globals.css";
+import "@/utils/appletRegistration";
 import { AnimatePresence } from "framer-motion";
 import type { AppProps } from "next/app";
+import AppDock from "@/components/AppDock";
+import AppletContainer from "@/components/AppletContainer";
 
 export default function App({ Component, pageProps }: AppProps) {
   const onExitComplete = () => {
@@ -16,13 +12,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className="overflow-hidden h-screen w-screen">
-      <NavApp />
-      <TerminalApp />
-      <MusicApp />
+      <AppletContainer />
       <AppDock />
-      <BrowserApp />
-      <FlashCardApp />
-
       <AnimatePresence
         onExitComplete={onExitComplete}
         initial={false}
