@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { X } from "react-feather";
-import { useVisibilityStore } from "@/stores/visibilityStore";
+import {
+  useVisibilityStore,
+  AppletName,
+  VisibilityState,
+} from "@/stores/visibilityStore";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { NextRouter } from "next/router";
 
@@ -9,9 +13,13 @@ type Props = {
   router?: NextRouter;
 };
 
+// Helper types to ensure type safety when accessing store properties
+type VisibilityKey<T extends AppletName> = `${Lowercase<T>}Visible`;
+type ToggleKey<T extends AppletName> = `toggle${T}`;
+
 const withAppTemplate = <P extends object>(
-  WrappedComponent: React.ComponentType<P>, // Changed from FC to ComponentType
-  appName: string,
+  WrappedComponent: React.ComponentType<P>,
+  appName: AppletName, // Change this to AppletName to ensure only valid applet names are used
   getDynamicTitle?: (router: NextRouter) => JSX.Element,
   fullSize: boolean = false,
 ) => {
@@ -20,52 +28,49 @@ const withAppTemplate = <P extends object>(
     const [localDynamicTitle, setLocalDynamicTitle] = useState<
       string | JSX.Element | null
     >(null);
+    const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
+
+    // Get visibility state with proper typing
+    const isVisible = useVisibilityStore((state) => {
+      const visibilityKey = `${appName.toLowerCase()}Visible` as VisibilityKey<
+        typeof appName
+      >;
+      return state[visibilityKey];
+    });
+
+    // Get toggle function with proper typing
     const toggleVisibility = useVisibilityStore((state) => {
-      const toggleFuncName = `toggle${appName}`;
-      return (state as any)[toggleFuncName];
+      const toggleFuncName = `toggle${appName}` as ToggleKey<typeof appName>;
+      return state[toggleFuncName];
     });
 
-    // State to track position
-    const [currentPosition, setCurrentPosition] = useState<{
-      x: number;
-      y: number;
-    }>({
-      x: 0,
-      y: 0,
-    });
-
-    // State to track the screen size
-    const isWideScreen =
-      typeof window !== "undefined" && window.innerWidth > 768;
-
-    // Handle random placement logic when the app opens
+    // Set random position when component mounts or becomes visible
     useEffect(() => {
-      // Set the random Y value to a range of 0 to 50% of the viewport height
-      const randomY = Math.random() * (window.innerHeight * 0.5); // Random Y between 0 and 50% of viewport height
-      const randomX = Math.random() * (window.innerWidth - 280); // Keep random X to prevent stacking horizontally (200 is approx width of the app)
+      if (isVisible) {
+        const randomY = Math.random() * (window.innerHeight * 0.5);
+        const randomX = Math.random() * (window.innerWidth - 280);
+        setCurrentPosition({ x: randomX, y: randomY });
+      }
+    }, [isVisible]);
 
-      setCurrentPosition({ x: randomX, y: randomY });
-    }, []);
-
-    // Update the position state when dragging occurs
+    // Update position on drag
     const handleDrag = (e: DraggableEvent, data: DraggableData) => {
       setCurrentPosition({ x: data.x, y: data.y });
     };
 
-    // Conditional rendering
-    const isVisible = useVisibilityStore((state) => {
-      const visibilityName = `${appName.toLowerCase()}Visible`;
-      return (state as any)[visibilityName];
-    });
+    // Single visibility check
+    if (!isVisible) {
+      return null;
+    }
 
-    if (!isVisible) return null;
-
-    const dynamicTitle = getDynamicTitle ? getDynamicTitle() : null;
+    const dynamicTitle = getDynamicTitle
+      ? getDynamicTitle(router as NextRouter)
+      : null;
 
     return (
       <Draggable
         handle=".drag-handle"
-        position={currentPosition} // Use the updated random position
+        position={currentPosition}
         onDrag={handleDrag}
       >
         <div className="relative top-2 right-10 z-[2000]">
@@ -85,11 +90,10 @@ const withAppTemplate = <P extends object>(
           <div
             className={`p-3 absolute z-[2000] mt-[2rem] w-[20rem] flex self-center ${
               fullSize
-                ? "h-[20rem] bg-opacity-90 bg-white" // Large app size
-                : "h-[7rem] bg-opacity-30 bg-white" // Small app size
+                ? "h-[20rem] bg-opacity-90 bg-white"
+                : "h-[7rem] bg-opacity-30 bg-white"
             } rounded-b`}
           >
-            {" "}
             <WrappedComponent
               {...(restProps as P)}
               setDynamicTitle={setLocalDynamicTitle}

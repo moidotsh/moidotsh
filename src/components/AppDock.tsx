@@ -15,6 +15,18 @@ function AppDock() {
     return fns;
   });
 
+  // Use hook in the component body, not in map callback
+  const visibilityStates = useVisibilityStore((state) => {
+    const states: Record<string, boolean> = {};
+    appletRegistry.forEach((applet) => {
+      states[applet.name] =
+        state[
+          `${applet.name.toLowerCase()}Visible` as `${Lowercase<AppletName>}Visible`
+        ];
+    });
+    return states;
+  });
+
   const handleIconClick = useCallback(
     (applet: AppletDefinition, index: number) => {
       const toggleFn = toggleFns[applet.name];
@@ -31,24 +43,15 @@ function AppDock() {
     [toggleFns],
   );
 
-  // Use hook in the component body, not in map callback
-  const visibilityStates = useVisibilityStore((state) => {
-    const states: Record<string, boolean> = {};
-    appletRegistry.forEach((applet) => {
-      states[applet.name] =
-        state[
-          `${applet.name.toLowerCase()}Visible` as `${Lowercase<AppletName>}Visible`
-        ];
-    });
-    return states;
-  });
+  // Filter out applets that shouldn't show in dock
+  const dockApplets = appletRegistry.filter((applet) => applet.showInDock);
 
   return (
     <div className="absolute w-full flex bottom-0 pt-20 justify-center overflow-y-hidden">
       <div className="z-[2000]">
         <div className="w-[60vh] text-center">
           <ul className="list-none flex justify-evenly items-center">
-            {appletRegistry.map((applet, index) => {
+            {dockApplets.map((applet, index) => {
               const isVisible = visibilityStates[applet.name];
 
               return (

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { rootFolder, findFolderByPath } from "./FolderStructureHelper";
 import { Folder, File } from "react-feather";
 import withAppTemplate from "./withAppTemplate";
-import BrowserApp from "./BrowserApp";
 import { useVisibilityStore } from "@/stores/visibilityStore";
 import { getContent } from "@/utils/contentMapping";
 
@@ -14,72 +13,46 @@ type Props = {
 };
 
 const NavApp: React.FC<Props> = ({ setDynamicTitle }) => {
-  const setBrowserContent = useVisibilityStore(
-    (state) => state.setBrowserContent
-  );
-  const toggleBrowserVisibility = useVisibilityStore(
-    (state) => state.toggleBrowser
-  );
-
-  const setBrowserTitle = useVisibilityStore((state) => state.setBrowserTitle);
-
   const router = useRouter();
+
+  // Get all the browser-related functions we need
+  const { openBrowser, setBrowserLoading, browserVisible } = useVisibilityStore(
+    (state) => ({
+      openBrowser: state.openBrowser,
+      setBrowserLoading: state.setBrowserLoading,
+      browserVisible: state.browserVisible,
+    }),
+  );
 
   const currentFolder = useMemo(
     () => findFolderByPath(router.pathname, rootFolder),
-    [router.pathname]
+    [router.pathname],
   );
 
-  // NavApp.tsx
-  const setBrowserLoading = useVisibilityStore(
-    (state) => state.setBrowserLoading
-  );
+  const handleFileClick = (fileName: string) => {
+    console.log("Click handler - starting");
+    console.log("Current store state:", useVisibilityStore.getState());
 
-  const getTitleFromFileName = (fileName: string): string => {
-    const parts = fileName.split("/");
-    const lastPart = parts[parts.length - 1];
-    const nameWithoutExtension = lastPart.replace(".tsx", "");
-    return (
-      nameWithoutExtension.charAt(0).toUpperCase() +
-      nameWithoutExtension.slice(1)
-    );
-  };
+    // Get content
+    const content = getContent(fileName);
+    const title = `Browser | ${fileName}`;
 
-  const handleFileClick = async (fileName: string) => {
-    // Show loading indicator
+    // Show loading state
     setBrowserLoading(true);
 
-    console.log("fetching ", fileName);
-
-    const title = getTitleFromFileName(fileName); // getTitleFromFileName
-    setBrowserTitle(`Browser | ${title}`);
-
-    // Check if the browser is visible
-    const isBrowserVisible = useVisibilityStore.getState().browserVisible;
-
-    // Simulate loading delay only if the browser is visible
-    if (isBrowserVisible) {
-      await new Promise((resolve) => setTimeout(resolve, 2250));
-    }
-
-    // Update content and title
-    const content = getContent(fileName);
-    setBrowserContent(content);
-    setBrowserTitle(`Browser | ${fileName.replace(".tsx", "")}`);
-
-    // Hide loading indicator
+    // Update browser immediately instead of setTimeout
+    console.log("Opening browser with:", { content, title });
+    openBrowser(content, title);
     setBrowserLoading(false);
 
-    // Only toggle visibility if the browser is not already visible
-    if (!isBrowserVisible) {
-      toggleBrowserVisibility();
-    }
+    console.log("Click handler - finished");
+    console.log("Final store state:", useVisibilityStore.getState());
   };
 
   useEffect(() => {
     const newTitle = `/home/arman${router.pathname}`;
-    setDynamicTitle!(newTitle);
-  }, [router.pathname]);
+    setDynamicTitle?.(newTitle);
+  }, [router.pathname, setDynamicTitle]);
 
   const sortedChildren = currentFolder
     ? [...currentFolder.children].sort((a, b) => {
@@ -105,13 +78,13 @@ const NavApp: React.FC<Props> = ({ setDynamicTitle }) => {
               ) : (
                 <div
                   className="flex flex-col items-center gap-2 z-[2000] cursor-pointer"
-                  onClick={() =>
-                    handleFileClick(
+                  onClick={() => {
+                    const fullPath =
                       router.pathname === "/"
-                        ? router.pathname + child.name
-                        : router.pathname + "/" + child.name
-                    )
-                  }
+                        ? `/${child.name}`
+                        : `${router.pathname}/${child.name}`;
+                    handleFileClick(fullPath);
+                  }}
                 >
                   <File />
                   <p className="text-xs cursor-pointer select-none z-[2000]">
@@ -127,5 +100,4 @@ const NavApp: React.FC<Props> = ({ setDynamicTitle }) => {
   );
 };
 
-// const declaration, title, dynamic title?, full size?
 export default withAppTemplate(NavApp, "Explorer");
