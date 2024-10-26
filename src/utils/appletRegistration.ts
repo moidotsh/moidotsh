@@ -62,5 +62,6 @@ registerApplet({
   displayName: "Cards",
   getIcon: () => React.createElement(BookOpen),
   component: FlashCardApp,
+  getDynamicTitle: getFlashcardTitle,
   fullSize: true,
 });

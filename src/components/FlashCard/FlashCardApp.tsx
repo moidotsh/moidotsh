@@ -186,4 +186,4 @@ const FlashcardApp = ({
   );
 };
 
-export default withAppTemplate(FlashcardApp, "Flashcards", true);
+export default withAppTemplate(FlashcardApp, "Flashcards", undefined, true);
