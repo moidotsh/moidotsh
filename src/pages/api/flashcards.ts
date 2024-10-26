@@ -57,7 +57,17 @@ const loadAllFlashcardsFromSubject = (basePath: string): Flashcard[] => {
 };
 
 const sortCards = (cards: Flashcard[]): Flashcard[] => {
-  // Separate cards into different types
+  // Helper function for shuffling
+  const shuffle = <T>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Separate cards into main categories
   const standaloneCards = cards.filter(
     (card) => !card.options && !card.nextQuestionId && !card.neverDisplayFirst,
   );
@@ -66,31 +76,74 @@ const sortCards = (cards: Flashcard[]): Flashcard[] => {
     (card) => card.options && !card.neverDisplayFirst,
   );
 
-  // Group chain starters by their source file
-  const chainGroups = new Map<string, Flashcard[]>();
-  cards.forEach((card) => {
-    if (card.nextQuestionId && !card.neverDisplayFirst) {
-      const key = `${card._sourcePath}/${card._sourceFile}`;
-      if (!chainGroups.has(key)) {
-        chainGroups.set(key, []);
+  // Process chains
+  const chainStarters = cards.filter(
+    (card) => card.nextQuestionId && !card.neverDisplayFirst,
+  );
+
+  // Build complete chains
+  const chains = chainStarters.map((starter) => {
+    const chain = [starter];
+    let nextId = starter.nextQuestionId;
+    while (nextId) {
+      const nextCard = cards.find((card) => card.id === nextId);
+      if (nextCard) {
+        chain.push(nextCard);
+        nextId = nextCard.nextQuestionId;
+      } else {
+        break;
       }
-      chainGroups.get(key)?.push(card);
     }
+    return chain;
   });
 
-  // Get all chain starters
-  const chainStarters = Array.from(chainGroups.values()).flat();
+  // Get any remaining chained cards
+  const remainingChainedCards = cards.filter(
+    (card) =>
+      card.neverDisplayFirst &&
+      !chains.flat().some((chainCard) => chainCard.id === card.id),
+  );
 
-  // Get remaining chained cards
-  const chainedCards = cards.filter((card) => card.neverDisplayFirst);
+  // Combine all non-chained cards
+  const nonChainedCards = [...standaloneCards, ...multipleChoiceStarters];
 
-  // Combine all cards in desired order
-  return [
-    ...chainStarters,
-    ...standaloneCards,
-    ...multipleChoiceStarters,
-    ...chainedCards,
-  ];
+  // Shuffle non-chained cards
+  const shuffledNonChained = shuffle(nonChainedCards);
+
+  // Shuffle the chains themselves
+  const shuffledChains = shuffle(chains);
+
+  // Create randomized insertion points for chains
+  const totalNonChained = shuffledNonChained.length;
+  const insertionPoints = Array(shuffledChains.length)
+    .fill(0)
+    .map(() => Math.floor(Math.random() * (totalNonChained + 1)));
+
+  // Sort insertion points to maintain relative positions
+  insertionPoints.sort((a, b) => a - b);
+
+  // Combine everything with chains inserted at random points
+  let result: Flashcard[] = [];
+  let nonChainedIndex = 0;
+
+  insertionPoints.forEach((insertPoint, chainIndex) => {
+    // Add non-chained cards up to insertion point
+    while (nonChainedIndex < insertPoint) {
+      result.push(shuffledNonChained[nonChainedIndex]);
+      nonChainedIndex++;
+    }
+    // Add the chain
+    result.push(...shuffledChains[chainIndex]);
+  });
+
+  // Add any remaining non-chained cards
+  while (nonChainedIndex < shuffledNonChained.length) {
+    result.push(shuffledNonChained[nonChainedIndex]);
+    nonChainedIndex++;
+  }
+
+  // Add remaining chained cards at the end
+  return [...result, ...remainingChainedCards];
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -118,33 +171,33 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
           console.error(`No mapping found for: ${folderName}`);
           continue;
         }
-
         const cards = loadAllFlashcardsFromSubject(basePath);
         console.log(`Loaded ${cards.length} cards from ${basePath}`);
         allCards.push(...cards);
       }
     }
 
-    const sortedCards = sortCards(allCards);
+    const sortedAndShuffledCards = sortCards(allCards);
 
     console.log("Response summary:", {
-      totalCards: sortedCards.length,
+      totalCards: sortedAndShuffledCards.length,
       byType: {
-        chainStarters: sortedCards.filter(
+        chainStarters: sortedAndShuffledCards.filter(
           (card) => card.nextQuestionId && !card.neverDisplayFirst,
         ).length,
-        standalone: sortedCards.filter(
+        standalone: sortedAndShuffledCards.filter(
           (card) =>
             !card.options && !card.nextQuestionId && !card.neverDisplayFirst,
         ).length,
-        multipleChoice: sortedCards.filter(
+        multipleChoice: sortedAndShuffledCards.filter(
           (card) => card.options && !card.neverDisplayFirst,
         ).length,
-        chained: sortedCards.filter((card) => card.neverDisplayFirst).length,
+        chained: sortedAndShuffledCards.filter((card) => card.neverDisplayFirst)
+          .length,
       },
     });
 
-    res.status(200).json(sortedCards);
+    res.status(200).json(sortedAndShuffledCards);
   } catch (error) {
     console.error("API error:", error);
     res.status(500).json({ error: "Failed to load flashcards" });
