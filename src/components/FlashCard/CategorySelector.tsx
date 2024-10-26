@@ -1,8 +1,10 @@
+// src/components/FlashCard/CategorySelector.tsx
 import React from "react";
+import { Category } from "@/assets/flashcards/flashcardCategories";
 
 type Props = {
-  categories: string[];
-  onSelectCategory: (category: string) => void;
+  categories: Category[];
+  onSelectCategory: (category: Category) => void;
 };
 
 const CategorySelector = ({ categories, onSelectCategory }: Props) => {

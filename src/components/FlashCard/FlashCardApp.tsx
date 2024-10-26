@@ -104,11 +104,10 @@ const FlashcardApp = () => {
     return <div>Error loading flashcards: {error.message}</div>;
   }
 
-  // Show category selection
   if (!selectedCategory) {
     return (
       <CategorySelector
-        categories={Object.keys(flashcardCategories)}
+        categories={Object.keys(flashcardCategories) as Category[]}
         onSelectCategory={setSelectedCategory}
       />
     );
