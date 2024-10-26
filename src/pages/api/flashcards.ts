@@ -20,27 +20,24 @@ const loadAllFlashcardsFromSubject = (basePath: string): Flashcard[] => {
       const entryPath = path.join(dirPath, entry.name);
 
       if (entry.isDirectory()) {
-        // Recursively process subdirectories
         processDirectory(entryPath);
       } else if (entry.isFile() && entry.name.endsWith(".json")) {
         try {
           const fileContent = readFileSync(entryPath, "utf8");
-          const cards = JSON.parse(fileContent);
+          const cards = JSON.parse(fileContent) as Flashcard[];
 
           // Add source file and path information
           const relativePath = path.relative(fullPath, dirPath);
-          cards.forEach(
-            (
-              card: Flashcard & { _sourceFile?: string; _sourcePath?: string },
-            ) => {
-              card._sourceFile = entry.name;
-              card._sourcePath = relativePath;
-            },
-          );
+          cards.forEach((card) => {
+            (card as Flashcard & { _sourceFile: string })._sourceFile =
+              entry.name;
+            (card as Flashcard & { _sourcePath: string })._sourcePath =
+              relativePath;
+          });
 
           // Handle chain files
           if (entry.name.startsWith("chain_")) {
-            cards.forEach((card: Flashcard, index: number) => {
+            cards.forEach((card, index) => {
               if (index > 0) card.neverDisplayFirst = true;
             });
           }

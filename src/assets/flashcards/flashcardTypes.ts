@@ -1,12 +1,15 @@
-export type Flashcard = {
-  id: string; // Unique identifier for each flashcard
+// src/assets/flashcards/flashcardTypes.ts
+export interface Flashcard {
+  id: string;
   front: string;
-  back?: string; // Optional, as some flashcards may not have a back
-  options?: string[]; // Optional, for multiple-choice questions
-  nextQuestionId?: string; // Optional, for chaining flashcards
-  neverDisplayFirst?: boolean; // Optional flag to prevent displaying this card first
-  chapter: number; // Chapter number for sorting
-  unit: number; // Unit number for sorting (e.g., 4.2 for chapter 4, unit 2)
-  stepNumber?: number; // Optional step number for multi-step sequences
-  totalSteps?: number; // Optional total number of steps for sequences
-};
+  back?: string;
+  options?: string[];
+  nextQuestionId?: string;
+  stepNumber?: number;
+  totalSteps?: number;
+  neverDisplayFirst?: boolean;
+
+  // Metadata fields
+  _sourceFile?: string;
+  _sourcePath?: string;
+}
