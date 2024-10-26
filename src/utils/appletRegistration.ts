@@ -1,14 +1,32 @@
 // src/utils/appletRegistration.ts
 import React from "react";
-import { Terminal, Music, Briefcase, BookOpen, Heart } from "react-feather";
+import {
+  Terminal,
+  Music,
+  Briefcase,
+  BookOpen,
+  Heart,
+  Globe,
+} from "react-feather";
 import { registerApplet } from "./appletUtils";
 import TerminalApp from "@/components/TerminalApp";
 import MusicApp from "@/components/MusicApp";
 import NavApp from "@/components/NavApp";
 import FlashCardApp from "@/components/FlashCard/FlashCardApp";
 import { useProgressStore } from "@/stores/flashcard";
+import BrowserApp from "@/components/BrowserApp";
 
 // Register existing applets with their internal and display names
+// appletRegistration.ts
+registerApplet({
+  name: "Browser",
+  displayName: "Browser",
+  getIcon: () => React.createElement(Globe),
+  component: BrowserApp,
+  fullSize: true,
+  showInDock: false, // This will hide it from the dock
+});
+
 registerApplet({
   name: "Explorer",
   displayName: "Explorer",

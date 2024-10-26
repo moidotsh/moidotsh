@@ -1,25 +1,36 @@
+// AppletContainer.tsx
 import React from "react";
 import { appletRegistry } from "@/utils/appletUtils";
-import { useVisibilityStore, AppletName } from "@/stores/visibilityStore";
+import { useVisibilityStore } from "@/stores/visibilityStore";
 
 const AppletContainer = () => {
-  const visibilityStates = useVisibilityStore((state) => {
-    const states: Record<string, boolean> = {};
-    appletRegistry.forEach((applet) => {
-      const visibilityKey =
-        `${applet.name.toLowerCase()}Visible` as `${Lowercase<AppletName>}Visible`;
-      states[applet.name] = state[visibilityKey];
-    });
-    return states;
-  });
+  const visibilityStates = useVisibilityStore((state) => ({
+    explorerVisible: state.explorerVisible,
+    terminalVisible: state.terminalVisible,
+    musicVisible: state.musicVisible,
+    browserVisible: state.browserVisible,
+    flashcardsVisible: state.flashcardsVisible,
+  }));
+
+  console.log("AppletContainer render - visibility states:", visibilityStates);
+  console.log("AppletContainer - registered applets:", appletRegistry);
 
   return (
     <>
       {appletRegistry.map((applet) => {
         const AppletComponent = applet.component;
-        const isVisible = visibilityStates[applet.name];
+        const visibilityKey = `${applet.name.toLowerCase()}Visible`;
+        const isVisible =
+          visibilityStates[visibilityKey as keyof typeof visibilityStates];
 
-        if (!isVisible) return null;
+        console.log(`Applet ${applet.name} visibility:`, isVisible);
+
+        if (!isVisible) {
+          console.log(`Skipping render of ${applet.name} - not visible`);
+          return null;
+        }
+
+        console.log(`Rendering ${applet.name}`);
         return <AppletComponent key={applet.name} />;
       })}
     </>
