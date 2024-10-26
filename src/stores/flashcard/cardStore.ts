@@ -7,10 +7,14 @@ import { useProgressStore } from "./progressStore";
 // src/stores/flashcard/cardStore.ts
 interface CardState {
   deck: Flashcard[];
+  originalDeck: Flashcard[]; // Store the full deck
   currentIndex: number;
   isFlipped: boolean;
   isLoading: boolean;
   error: Error | null;
+  cardsPerSession: number; // New property
+  sessionProgress: number; // New property
+  totalSessions: number; // New property
 
   loadDeck: (category: string, folders: string[]) => Promise<void>;
   nextCard: (nextQuestionId?: string) => void;
@@ -24,40 +28,47 @@ interface CardState {
     hasNext: boolean;
     hasPrevious: boolean;
   };
+
+  getProgress: () => {
+    currentSession: number;
+    cardsInCurrentSession: number;
+    totalCardsInSession: number;
+    totalCardsOverall: number;
+    completedCards: number;
+  };
+  setCardsPerSession: (number: number) => void;
 }
 
 export const useCardStore = create<CardState>((set, get) => ({
   deck: [],
+  originalDeck: [], // Keep the full deck
   currentIndex: 0,
   isFlipped: false,
   isLoading: false,
   error: null,
+  cardsPerSession: 10, // Default value, can be made configurable
+  sessionProgress: 0, // Track current session
+  totalSessions: 0, // Track total sessions completed
 
   loadDeck: async (category, folders) => {
     set({ isLoading: true, error: null });
     try {
-      const flashcards = await fetchFlashcardsFromAPI(category, folders);
-      console.log("Loaded flashcards:", {
-        total: flashcards.length,
-        types: {
-          chainStarters: flashcards.filter(
-            (card) => card.nextQuestionId && !card.neverDisplayFirst,
-          ).length,
-          standalone: flashcards.filter(
-            (card) =>
-              !card.options && !card.nextQuestionId && !card.neverDisplayFirst,
-          ).length,
-          multipleChoice: flashcards.filter(
-            (card) => card.options && !card.neverDisplayFirst,
-          ).length,
-          chained: flashcards.filter((card) => card.neverDisplayFirst).length,
-        },
-      });
+      const allCards = await fetchFlashcardsFromAPI(category, folders);
+      const shuffledCards = [...allCards].sort(() => Math.random() - 0.5);
+      const sessionCards = shuffledCards.slice(0, get().cardsPerSession);
 
       set({
-        deck: flashcards,
+        originalDeck: allCards,
+        deck: sessionCards,
         currentIndex: 0,
         isLoading: false,
+        sessionProgress: 0,
+      });
+
+      console.log("Loaded deck:", {
+        totalCards: allCards.length,
+        sessionCards: sessionCards.length,
+        cardsPerSession: get().cardsPerSession,
       });
     } catch (error) {
       console.error("Error loading deck:", error);
@@ -74,62 +85,41 @@ export const useCardStore = create<CardState>((set, get) => ({
         const nextIndex = state.deck.findIndex(
           (card) => card.id === nextQuestionId,
         );
-        console.log("Following chain to:", { nextQuestionId, nextIndex });
-        return { currentIndex: nextIndex, isFlipped: false };
+        return {
+          currentIndex: nextIndex,
+          isFlipped: false,
+          sessionProgress: state.sessionProgress + 1,
+        };
       }
 
-      // Current card is done, mark it as completed
-      const currentCard = state.deck[state.currentIndex];
-      progress.markCompleted(currentCard.id);
+      // Update session progress
+      const newProgress = state.sessionProgress + 1;
+      const isSessionComplete = newProgress >= state.cardsPerSession;
 
-      // Find the next available card
-      const findNextCard = (startIndex: number): number => {
-        let nextIndex = startIndex;
-        while (nextIndex < state.deck.length) {
-          const card = state.deck[nextIndex];
-          // Card is available if:
-          // 1. It's not part of a chain (neverDisplayFirst is false)
-          // 2. It hasn't been completed
-          // 3. OR it's the start of a new chain
-          if (
-            (!card.neverDisplayFirst && !progress.isCardCompleted(card.id)) ||
-            (card.nextQuestionId && !progress.isCardCompleted(card.id))
-          ) {
-            return nextIndex;
-          }
-          nextIndex++;
-        }
-        return -1;
-      };
-
-      const nextIndex = findNextCard(state.currentIndex + 1);
-
-      // If we found no next card, we're done
-      if (nextIndex === -1) {
-        // Double check if we really completed everything
-        const remainingCards = state.deck.filter(
-          (card) =>
-            (!card.neverDisplayFirst || card.nextQuestionId) &&
-            !progress.isCardCompleted(card.id),
+      if (isSessionComplete) {
+        // Load next session of cards
+        const nextSessionStart =
+          state.cardsPerSession * (state.totalSessions + 1);
+        const nextSessionCards = state.originalDeck.slice(
+          nextSessionStart,
+          nextSessionStart + state.cardsPerSession,
         );
 
-        if (remainingCards.length === 0) {
-          console.log("All cards completed");
-          return { currentIndex: -1, isFlipped: false };
-        }
-
-        // If there are still cards, start from beginning
-        const firstAvailable = findNextCard(0);
-        return { currentIndex: firstAvailable, isFlipped: false };
+        return {
+          deck: nextSessionCards.length > 0 ? nextSessionCards : state.deck,
+          currentIndex: 0,
+          sessionProgress: 0,
+          totalSessions: state.totalSessions + 1,
+          isFlipped: false,
+        };
       }
 
-      console.log("Moving to next card:", {
-        from: currentCard.id,
-        to: state.deck[nextIndex].id,
-        index: nextIndex,
-      });
-
-      return { currentIndex: nextIndex, isFlipped: false };
+      // Normal progression
+      return {
+        currentIndex: state.currentIndex + 1,
+        sessionProgress: newProgress,
+        isFlipped: false,
+      };
     }),
 
   previousCard: () =>
@@ -145,6 +135,19 @@ export const useCardStore = create<CardState>((set, get) => ({
       }
       return { currentIndex: Math.max(0, prevIndex), isFlipped: false };
     }),
+
+  // Add method to get progress info
+  getProgress: () => {
+    const state = get();
+    return {
+      currentSession: state.totalSessions + 1,
+      cardsInCurrentSession: state.sessionProgress,
+      totalCardsInSession: state.cardsPerSession,
+      totalCardsOverall: state.originalDeck.length,
+      completedCards:
+        state.totalSessions * state.cardsPerSession + state.sessionProgress,
+    };
+  },
 
   flipCard: () =>
     set((state) => ({
@@ -163,6 +166,8 @@ export const useCardStore = create<CardState>((set, get) => ({
       ? state.deck[state.currentIndex]
       : null;
   },
+
+  setCardsPerSession: (number: number) => set({ cardsPerSession: number }),
 
   getDeckStatus: () => {
     const state = get();
