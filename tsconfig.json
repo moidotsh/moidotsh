@@ -12,6 +12,7 @@
     "resolveJsonModule": true, // Required for JSON imports
     "isolatedModules": true,
     "jsx": "preserve",
+    "types": ["bun-types"],
     "typeRoots": ["./node_modules/@types", "./types"],
     "incremental": true,
     "allowSyntheticDefaultImports": true, // Allows default imports from CommonJS
@@ -19,6 +20,6 @@
       "@/*": ["./src/*"] // Ensures that non-relative imports work as expected
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/scripts/**/*.ts"],
   "exclude": ["node_modules"]
 }

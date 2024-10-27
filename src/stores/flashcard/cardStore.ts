@@ -1,11 +1,14 @@
 import { create } from "zustand";
 import { Flashcard } from "@/assets/flashcards/flashcardTypes";
-import { fetchFlashcardsFromAPI } from "@/utils/flashcardUtils";
 import { useProgressStore } from "./progressStore";
+import {
+  FlashcardWithPath,
+  fetchFlashcardsFromAPI,
+} from "@/utils/flashcardUtils";
 
 interface CardState {
-  deck: Flashcard[];
-  originalDeck: Flashcard[];
+  deck: FlashcardWithPath[];
+  originalDeck: FlashcardWithPath[];
   currentIndex: number;
   isFlipped: boolean;
   isLoading: boolean;
@@ -54,12 +57,12 @@ export const useCardStore = create<CardState>((set, get) => ({
   loadDeck: async (category, folders) => {
     set({ isLoading: true, error: null });
     try {
-      const allCards = await fetchFlashcardsFromAPI(category, folders);
-      const shuffledCards = [...allCards].sort(() => Math.random() - 0.5);
+      const cards = await fetchFlashcardsFromAPI(category, folders);
+      const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
       const sessionCards = shuffledCards.slice(0, get().cardsPerSession);
 
       set({
-        originalDeck: allCards,
+        originalDeck: cards,
         deck: sessionCards,
         currentIndex: 0,
         isLoading: false,
@@ -69,7 +72,7 @@ export const useCardStore = create<CardState>((set, get) => ({
       });
 
       console.log("Loaded deck:", {
-        totalCards: allCards.length,
+        totalCards: cards.length,
         sessionCards: sessionCards.length,
         cardsPerSession: get().cardsPerSession,
       });

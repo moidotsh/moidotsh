@@ -15,6 +15,7 @@ import {
   useCardStore,
 } from "@/stores/flashcard";
 import { Heart } from "react-feather";
+import DatabaseDebug from "./DatabaseDebug";
 
 const FlashcardApp = ({
   setDynamicTitle,
@@ -57,6 +58,13 @@ const FlashcardApp = ({
       totalCardsInSession: state.cardsPerSession,
     }),
   );
+
+  useEffect(() => {
+    console.log("Environment variables:", {
+      url: window.ENV?.NEXT_PUBLIC_SUPABASE_URL ? "Set" : "Missing",
+      key: window.ENV?.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "Set" : "Missing",
+    });
+  }, []);
 
   useEffect(() => {
     if (setDynamicTitle) {
@@ -174,12 +182,15 @@ const FlashcardApp = ({
       : [];
 
     return (
-      <FolderSelector
-        folders={folders}
-        selectedFolders={selectedFolders}
-        onToggleFolderSelection={toggleFolderSelection}
-        onStart={startFlashcards}
-      />
+      <>
+        {/* <DatabaseDebug /> */}
+        <FolderSelector
+          folders={folders}
+          selectedFolders={selectedFolders}
+          onToggleFolderSelection={toggleFolderSelection}
+          onStart={startFlashcards}
+        />
+      </>
     );
   }
 
