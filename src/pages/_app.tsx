@@ -10,6 +10,14 @@ export default function App({ Component, pageProps }: AppProps) {
     window.scrollTo({ top: 0 });
   };
 
+  // Safely set environment variables on window object
+  if (typeof window !== "undefined") {
+    window.ENV = {
+      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    };
+  }
+
   return (
     <div className="overflow-hidden h-screen w-screen">
       <AppletContainer />

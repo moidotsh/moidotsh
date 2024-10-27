@@ -1,18 +1,18 @@
+// src/stores/flashcard/cardStore.ts
 import { create } from "zustand";
-import { Flashcard } from "@/assets/flashcards/flashcardTypes";
-import { fetchFlashcardsFromAPI } from "@/utils/flashcardUtils";
+import { FlashcardWithPath } from "@/utils/flashcardUtils";
 import { useProgressStore } from "./progressStore";
+import { fetchFlashcardsFromAPI } from "@/utils/flashcardUtils";
 
 interface CardState {
-  deck: Flashcard[];
-  originalDeck: Flashcard[];
+  deck: FlashcardWithPath[];
+  originalDeck: FlashcardWithPath[];
   currentIndex: number;
   isFlipped: boolean;
   isLoading: boolean;
   error: Error | null;
   cardsPerSession: number;
   sessionProgress: number;
-  totalSessions: number;
   isSessionComplete: boolean;
   isGameOver: boolean;
 
@@ -21,21 +21,13 @@ interface CardState {
   previousCard: () => void;
   flipCard: () => void;
   resetDeck: () => void;
-  getCurrentCard: () => Flashcard | null;
+  getCurrentCard: () => FlashcardWithPath | null;
   getDeckStatus: () => {
     totalCards: number;
     currentPosition: number;
     hasNext: boolean;
     hasPrevious: boolean;
   };
-  getProgress: () => {
-    currentSession: number;
-    cardsInCurrentSession: number;
-    totalCardsInSession: number;
-    totalCardsOverall: number;
-    completedCards: number;
-  };
-  setCardsPerSession: (number: number) => void;
 }
 
 export const useCardStore = create<CardState>((set, get) => ({
@@ -47,19 +39,18 @@ export const useCardStore = create<CardState>((set, get) => ({
   error: null,
   cardsPerSession: 10,
   sessionProgress: 0,
-  totalSessions: 0,
   isSessionComplete: false,
   isGameOver: false,
 
   loadDeck: async (category, folders) => {
     set({ isLoading: true, error: null });
     try {
-      const allCards = await fetchFlashcardsFromAPI(category, folders);
-      const shuffledCards = [...allCards].sort(() => Math.random() - 0.5);
+      const cards = await fetchFlashcardsFromAPI(category, folders);
+      const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
       const sessionCards = shuffledCards.slice(0, get().cardsPerSession);
 
       set({
-        originalDeck: allCards,
+        originalDeck: cards,
         deck: sessionCards,
         currentIndex: 0,
         isLoading: false,
@@ -67,37 +58,17 @@ export const useCardStore = create<CardState>((set, get) => ({
         isSessionComplete: false,
         isGameOver: false,
       });
-
-      console.log("Loaded deck:", {
-        totalCards: allCards.length,
-        sessionCards: sessionCards.length,
-        cardsPerSession: get().cardsPerSession,
-      });
     } catch (error) {
-      console.error("Error loading deck:", error);
       set({ error: error as Error, isLoading: false });
-    }
-  },
-
-  checkGameStatus: () => {
-    const hasLivesLeft = useProgressStore.getState().hasLivesLeft();
-    if (!hasLivesLeft) {
-      set({
-        isGameOver: true,
-        currentIndex: -1, // This will trigger the completion/game over screen
-        isSessionComplete: true,
-      });
     }
   },
 
   nextCard: (nextQuestionId) =>
     set((state) => {
-      // Check if game is over or session is complete
       if (state.isGameOver || state.isSessionComplete) {
         return state;
       }
 
-      // Check lives after each card
       const hasLivesLeft = useProgressStore.getState().hasLivesLeft();
       if (!hasLivesLeft) {
         return {
@@ -114,13 +85,13 @@ export const useCardStore = create<CardState>((set, get) => ({
           (card) => card.id === nextQuestionId,
         );
         return {
+          ...state,
           currentIndex: nextIndex,
           isFlipped: false,
           sessionProgress: state.sessionProgress + 1,
         };
       }
 
-      // Update session progress
       const newProgress = state.sessionProgress + 1;
       const isComplete = newProgress >= state.cardsPerSession;
 
@@ -133,8 +104,8 @@ export const useCardStore = create<CardState>((set, get) => ({
         };
       }
 
-      // Normal progression
       return {
+        ...state,
         currentIndex: state.currentIndex + 1,
         sessionProgress: newProgress,
         isFlipped: false,
@@ -147,7 +118,7 @@ export const useCardStore = create<CardState>((set, get) => ({
       let prevIndex = state.currentIndex - 1;
       while (
         prevIndex >= 0 &&
-        (state.deck[prevIndex].neverDisplayFirst ||
+        (state.deck[prevIndex].never_display_first || // Updated property name
           progress.isCardCompleted(state.deck[prevIndex].id))
       ) {
         prevIndex--;
@@ -155,10 +126,7 @@ export const useCardStore = create<CardState>((set, get) => ({
       return { currentIndex: Math.max(0, prevIndex), isFlipped: false };
     }),
 
-  flipCard: () =>
-    set((state) => ({
-      isFlipped: !state.isFlipped,
-    })),
+  flipCard: () => set((state) => ({ isFlipped: !state.isFlipped })),
 
   resetDeck: () =>
     set({
@@ -176,37 +144,16 @@ export const useCardStore = create<CardState>((set, get) => ({
       : null;
   },
 
-  getProgress: () => {
-    const state = get();
-    return {
-      currentSession: state.totalSessions + 1,
-      cardsInCurrentSession: state.sessionProgress,
-      totalCardsInSession: state.cardsPerSession,
-      totalCardsOverall: state.originalDeck.length,
-      completedCards:
-        state.totalSessions * state.cardsPerSession + state.sessionProgress,
-    };
-  },
-
-  setCardsPerSession: (number: number) => set({ cardsPerSession: number }),
-
   getDeckStatus: () => {
     const state = get();
     const displayableCards = state.deck.filter(
-      (card) => !card.neverDisplayFirst,
+      (card) => !card.never_display_first, // Updated property name
     );
-    const progress = useProgressStore.getState();
-    const completedCount = displayableCards.filter((card) =>
-      progress.isCardCompleted(card.id),
-    ).length;
-
     return {
       totalCards: displayableCards.length,
       currentPosition: state.currentIndex,
       hasNext: state.currentIndex < state.deck.length - 1,
       hasPrevious: state.currentIndex > 0,
-      completedCount,
-      remaining: displayableCards.length - completedCount,
     };
   },
 }));
