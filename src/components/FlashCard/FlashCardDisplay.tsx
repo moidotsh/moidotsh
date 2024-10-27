@@ -44,7 +44,8 @@ const FlashcardDisplay = ({
       hasNextQuestionId: Boolean(flashcard.nextQuestionId),
       nextQuestionId: flashcard.nextQuestionId,
     });
-    onNext(flashcard.nextQuestionId);
+    // Convert null to undefined when passing to onNext
+    onNext(flashcard.nextQuestionId ?? undefined);
   };
 
   // Handle if flashcard is null or undefined

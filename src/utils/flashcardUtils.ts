@@ -1,6 +1,36 @@
 // src/utils/flashcardUtils.ts
 import { supabase } from "@/lib/supabase";
 
+// Define the FlashcardWithPath type
+export type FlashcardWithPath = {
+  id: string;
+  front: string;
+  back?: string | null;
+  options?: string[] | null;
+  next_question_id?: string | null;
+  step_number?: number | null;
+  total_steps?: number | null;
+  never_display_first?: boolean;
+
+  // Path-related fields from the view
+  lesson_id: string;
+  lesson_name: string;
+  unit_id: string;
+  unit_number: number;
+  chapter_id: string;
+  chapter_number: number;
+  subcategory_id: string;
+  subcategory_name: string;
+  category_id: string;
+  category_name: string;
+
+  // Metadata fields
+  created_at?: string;
+  source_file?: string | null;
+  source_path?: string | null;
+  user_id?: string | null;
+};
+
 export const fetchFlashcardsFromAPI = async (
   category: string,
   folders: string[],

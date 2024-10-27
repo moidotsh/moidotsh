@@ -1,24 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ESNext", // Upgraded to modern ES standard
+    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "ESNext", // Ensuring compatibility with Next.js
-    "moduleResolution": "Node", // Switched to Node-style module resolution
-    "resolveJsonModule": true, // Required for JSON imports
-    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
     "jsx": "preserve",
-    "types": ["bun-types"],
-    "typeRoots": ["./node_modules/@types", "./types"],
     "incremental": true,
-    "allowSyntheticDefaultImports": true, // Allows default imports from CommonJS
+    "allowSyntheticDefaultImports": true,
     "paths": {
-      "@/*": ["./src/*"] // Ensures that non-relative imports work as expected
-    }
+      "@/*": ["./src/*"]
+    },
+    "isolatedModules": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/scripts/**/*.ts"],
   "exclude": ["node_modules"]

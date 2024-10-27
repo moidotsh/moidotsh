@@ -112,7 +112,7 @@ const FlashcardApp = ({
   // Set displayable total when deck is loaded
   useEffect(() => {
     if (deck.length > 0) {
-      const displayableCards = deck.filter((card) => !card.neverDisplayFirst);
+      const displayableCards = deck.filter((card) => !card.never_display_first);
       setDisplayableTotal(displayableCards.length);
     }
   }, [deck, setDisplayableTotal]);
