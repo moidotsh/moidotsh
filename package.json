@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate-flashcards": "bun run src/scripts/migrateFlashcards.ts"
   },
   "dependencies": {
     "@matejmazur/react-katex": "^3.1.3",

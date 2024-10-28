@@ -1,6 +1,5 @@
 // src/components/FlashCard/DatabaseDebug.tsx
 import React, { useEffect, useState } from "react";
-import { testDatabaseContent } from "@/utils/flashcardUtils";
 import { supabase } from "@/utils/supabase";
 
 const DatabaseDebug = () => {
@@ -20,18 +19,6 @@ const DatabaseDebug = () => {
 
     return data;
   };
-
-  useEffect(() => {
-    const checkDatabase = async () => {
-      try {
-        const content = await testDatabaseContent();
-        setDbContent(content);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
-      }
-    };
-    checkDatabase();
-  }, []);
 
   if (error) {
     return <div className="text-red-500">Error: {error}</div>;

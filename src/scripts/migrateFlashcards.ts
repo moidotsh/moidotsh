@@ -193,7 +193,6 @@ async function migrateFlashcards() {
                 ? await ensureLesson(unitId, lessonName)
                 : null;
 
-            // Skip if we don't have a complete path
             if (!lessonId) {
               console.log("Skipping file due to incomplete path:", entry.name);
               continue;
@@ -201,7 +200,30 @@ async function migrateFlashcards() {
 
             console.log("Processing cards for lesson:", lessonName);
 
+            // Get existing cards for this lesson to check for duplicates
+            const { data: existingCards } = await supabase
+              .from("flashcards")
+              .select("front, source_file, source_path")
+              .eq("lesson_id", lessonId);
+
             for (const card of cards) {
+              // Check if this card already exists
+              const isDuplicate = existingCards?.some(
+                (existingCard) =>
+                  existingCard.front === card.front &&
+                  existingCard.source_file === entry.name &&
+                  existingCard.source_path === subDir,
+              );
+
+              if (isDuplicate) {
+                console.log(
+                  "Skipping duplicate card:",
+                  card.front.substring(0, 30) + "...",
+                );
+                continue;
+              }
+
+              // Insert new card
               const { data, error } = await supabase.from("flashcards").insert({
                 lesson_id: lessonId,
                 front: card.front,
@@ -219,7 +241,7 @@ async function migrateFlashcards() {
                 console.error("Error inserting card:", error);
                 console.error("Card data:", card);
               } else {
-                console.log("Successfully inserted card");
+                console.log("Successfully inserted new card");
               }
             }
           } catch (error) {
@@ -247,7 +269,26 @@ async function migrateFlashcards() {
   }
 }
 
+// Add a cleanup function to remove orphaned flashcards
+async function cleanupOrphanedFlashcards() {
+  console.log("Cleaning up orphaned flashcards...");
+
+  const { data: orphanedCards, error } = await supabase
+    .from("flashcards")
+    .delete()
+    .is("lesson_id", null)
+    .select();
+
+  if (error) {
+    console.error("Error cleaning up orphaned cards:", error);
+  } else {
+    console.log(`Removed ${orphanedCards?.length || 0} orphaned flashcards`);
+  }
+}
+
+// Main execution
 migrateFlashcards()
+  .then(cleanupOrphanedFlashcards)
   .then(() => {
     console.log("Migration script completed");
     process.exit(0);

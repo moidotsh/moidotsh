@@ -1,7 +1,9 @@
 // src/utils/flashcardUtils.ts
-import { supabase } from "@/lib/supabase";
 
-// Define the FlashcardWithPath type
+import { supabase } from "@/lib/supabase";
+import { Database } from "@/types/supabase";
+
+// Define the FlashcardWithPath type based on your database schema
 export type FlashcardWithPath = {
   id: string;
   front: string;
@@ -11,6 +13,8 @@ export type FlashcardWithPath = {
   step_number?: number | null;
   total_steps?: number | null;
   never_display_first?: boolean;
+  source_file?: string | null;
+  source_path?: string | null;
 
   // Path-related fields from the view
   lesson_id: string;
@@ -23,11 +27,7 @@ export type FlashcardWithPath = {
   subcategory_name: string;
   category_id: string;
   category_name: string;
-
-  // Metadata fields
   created_at?: string;
-  source_file?: string | null;
-  source_path?: string | null;
   user_id?: string | null;
 };
 
@@ -41,31 +41,50 @@ export const fetchFlashcardsFromAPI = async (
     // Convert category to lowercase to match database
     const categoryName = category.toLowerCase();
 
-    // Parse the chapter numbers from folders
-    const chapterNumbers = folders
-      .map((folder) => {
-        const number = parseInt(folder);
-        return number;
-      })
-      .filter((num) => !isNaN(num));
-
-    console.log("Query parameters:", {
-      categoryName,
-      chapterNumbers,
+    // Parse the chapter.unit format
+    const unitSelections = folders.map((folder) => {
+      const [chapter, unit] = folder.split(".");
+      console.log("Parsed folder selection:", { folder, chapter, unit });
+      return {
+        chapter: parseInt(chapter),
+        unit: parseInt(unit),
+      };
     });
 
-    // Query using the flashcard_paths view
-    const { data, error } = await supabase
+    console.log("Unit selections:", unitSelections);
+
+    // Start with base query
+    let query = supabase
       .from("flashcard_paths")
       .select("*")
-      .eq("category_name", categoryName)
-      .in("chapter_number", chapterNumbers);
+      .eq("category_name", categoryName);
 
-    console.log("Query result:", {
+    // Add the first unit condition
+    if (unitSelections.length > 0) {
+      query = query
+        .eq("chapter_number", unitSelections[0].chapter)
+        .eq("unit_number", unitSelections[0].unit);
+    }
+
+    // Add additional unit conditions with or()
+    for (let i = 1; i < unitSelections.length; i++) {
+      const { chapter, unit } = unitSelections[i];
+      query = query.or(`chapter_number.eq.${chapter},unit_number.eq.${unit}`);
+    }
+
+    console.log("Executing query for units:", unitSelections);
+
+    const { data, error } = await query;
+
+    console.log("Query response:", {
       hasData: Boolean(data),
       dataLength: data?.length ?? 0,
       error: error?.message ?? "none",
-      sampleData: data?.[0],
+      queriedUnits: unitSelections,
+      returnedUnits: data?.map((card) => ({
+        chapter: card.chapter_number,
+        unit: card.unit_number,
+      })),
     });
 
     if (error) {
@@ -77,89 +96,39 @@ export const fetchFlashcardsFromAPI = async (
       return [];
     }
 
-    return data;
+    // Double-check that all cards belong to requested units
+    const filteredData = data.filter((card) => {
+      const isInRequestedUnit = unitSelections.some(
+        (sel) =>
+          sel.chapter === card.chapter_number && sel.unit === card.unit_number,
+      );
+      if (!isInRequestedUnit) {
+        console.warn("Found card from unexpected unit:", {
+          cardId: card.id,
+          chapter: card.chapter_number,
+          unit: card.unit_number,
+          requestedUnits: unitSelections,
+        });
+      }
+      return isInRequestedUnit;
+    });
+
+    console.log("After filtering:", {
+      originalCount: data.length,
+      filteredCount: filteredData.length,
+      requestedUnits: unitSelections,
+      returnedUnits: [
+        ...new Set(
+          filteredData.map(
+            (card) => `${card.chapter_number}.${card.unit_number}`,
+          ),
+        ),
+      ],
+    });
+
+    return filteredData as FlashcardWithPath[];
   } catch (error) {
     console.error("Error in fetchFlashcardsFromAPI:", error);
     throw error;
   }
-};
-
-// Add a helper function to get the available chapters for each subcategory
-export const getChapterNumbersForSubcategory = (
-  subcategory: string,
-): number[] => {
-  switch (subcategory) {
-    case "Pre-Calculus":
-      return [4, 5, 6]; // Update these numbers based on your actual chapters
-    case "Calculus 1":
-      return [1, 2, 3]; // Update these numbers based on your actual chapters
-    default:
-      return [];
-  }
-};
-
-export const testFlashcardQuery = async () => {
-  try {
-    const { data, error } = await supabase
-      .from("flashcard_paths")
-      .select("*")
-      .limit(1);
-
-    console.log("Test query result:", {
-      success: !error,
-      hasData: Boolean(data),
-      error: error?.message,
-      firstRecord: data?.[0],
-    });
-
-    return !error && data && data.length > 0;
-  } catch (error) {
-    console.error("Test query failed:", error);
-    return false;
-  }
-};
-
-// Add this helper function to check if the database is accessible
-export const testSupabaseConnection = async () => {
-  try {
-    const { data, error } = await supabase
-      .from("flashcard_paths")
-      .select("count")
-      .single();
-
-    if (error) {
-      console.error("Supabase connection test failed:", error);
-      return false;
-    }
-
-    console.log("Supabase connection successful");
-    return true;
-  } catch (error) {
-    console.error("Supabase connection test error:", error);
-    return false;
-  }
-};
-
-// Add a test function to check the database directly
-export const testDatabaseContent = async () => {
-  const { data: categories } = await supabase.from("categories").select("*");
-
-  const { data: chapters } = await supabase.from("chapters").select("*");
-
-  const { data: flashcards } = await supabase
-    .from("flashcards")
-    .select("*")
-    .limit(5);
-
-  console.log("Database content:", {
-    categories,
-    chapters,
-    sampleFlashcards: flashcards,
-  });
-
-  return {
-    categories,
-    chapters,
-    sampleFlashcards: flashcards,
-  };
 };
