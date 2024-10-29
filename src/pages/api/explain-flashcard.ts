@@ -33,7 +33,7 @@ Correct Answer: ${answer}`
 }
 
 Explain why this is correct, using LaTeX math notation where appropriate.
-Keep explanations clear and complete.`;
+Keep explanations brieft but clear and complete.`;
 
     const response = await fetch(
       "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1",
