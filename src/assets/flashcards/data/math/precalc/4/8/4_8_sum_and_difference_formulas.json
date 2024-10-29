@@ -1,97 +1,167 @@
 [
   {
-    "id": "cosine_sum_formula",
-    "front": "What is the formula for \\(\\cos(a + b)\\)?",
-    "back": "\\(\\cos(a + b) = \\cos a \\cos b - \\sin a \\sin b\\)"
-  },
-  {
-    "id": "sine_difference_options",
-    "front": "Which of the following is the correct expression for \\(\\sin(a - b)\\)?",
+    "id": "cosine_sum_formula_mc",
+    "front": "What is the sum formula for \\(\\cos(a + b)\\)?",
     "options": [
-      "\\(\\sin a \\cos b - \\cos a \\sin b\\)",
-      "\\(\\sin a \\cos b + \\cos a \\sin b\\)",
-      "\\(\\cos a \\cos b + \\sin a \\sin b\\)",
-      "\\(\\cos a \\sin b - \\sin a \\cos b\\)"
+      "\\(\\cos(a + b) = \\cos a \\cos b - \\sin a \\sin b\\)",
+      "\\(\\cos(a + b) = \\cos a \\sin b + \\sin a \\cos b\\)",
+      "\\(\\cos(a + b) = \\sin a \\sin b - \\cos a \\cos b\\)",
+      "\\(\\cos(a + b) = \\cos a \\cos b + \\sin a \\sin b\\)"
     ]
   },
   {
-    "id": "cofunction_identity_cosine",
-    "front": "What is the cofunction identity for \\(\\cos\\left(\\frac{\\pi}{2} - x\\right)\\)?",
-    "back": "\\(\\cos\\left(\\frac{\\pi}{2} - x\\right) = \\sin(x)\\)"
-  },
-  {
-    "id": "sine_sum_example",
-    "front": "Using the sum formula for sine, what is \\(\\sin(45^\\circ + 30^\\circ)\\)?",
+    "id": "sine_sum_formula_mc",
+    "front": "What is the sum formula for \\(\\sin(a + b)\\)?",
     "options": [
-      "\\(\\frac{\\sqrt{6} + \\sqrt{2}}{4}\\)",
-      "\\(\\frac{\\sqrt{3} + 1}{2}\\)",
-      "\\(\\frac{\\sqrt{6} - \\sqrt{2}}{4}\\)",
-      "\\(\\frac{\\sqrt{3} - 1}{2}\\)"
+      "\\(\\sin(a + b) = \\sin a \\cos b + \\cos a \\sin b\\)",
+      "\\(\\sin(a + b) = \\sin a \\sin b + \\cos a \\cos b\\)",
+      "\\(\\sin(a + b) = \\cos a \\cos b - \\sin a \\sin b\\)",
+      "\\(\\sin(a + b) = \\sin a + \\cos b\\)"
     ]
   },
   {
-    "id": "incorrect_double_angle_cosine",
-    "front": "Which of the following identities is **not** a correct double angle formula?",
+    "id": "cosine_difference_formula_mc",
+    "front": "What is the difference formula for \\(\\cos(a - b)\\)?",
     "options": [
-      "\\(\\cos(2x) = 2 \\sin^2 x + 1\\)",
+      "\\(\\cos(a - b) = \\cos a \\cos b + \\sin a \\sin b\\)",
+      "\\(\\cos(a - b) = \\cos a \\sin b - \\sin a \\cos b\\)",
+      "\\(\\cos(a - b) = \\sin a \\sin b - \\cos a \\cos b\\)",
+      "\\(\\cos(a - b) = \\cos a \\cos b - \\sin a \\sin b\\)"
+    ]
+  },
+  {
+    "id": "sine_difference_formula_mc",
+    "front": "What is the difference formula for \\(\\sin(a - b)\\)?",
+    "options": [
+      "\\(\\sin(a - b) = \\sin a \\cos b - \\cos a \\sin b\\)",
+      "\\(\\sin(a - b) = \\sin a \\sin b + \\cos a \\cos b\\)",
+      "\\(\\sin(a - b) = \\cos a \\cos b - \\sin a \\sin b\\)",
+      "\\(\\sin(a - b) = \\sin a \\cos b + \\cos a \\sin b\\)"
+    ]
+  },
+  {
+    "id": "cofunction_identity_sine_mc",
+    "front": "What is the cofunction identity for \\(\\sin(x)\\)?",
+    "options": [
+      "\\(\\sin(x) = \\cos\\left(\\frac{\\pi}{2} - x\\right)\\)",
+      "\\(\\sin(x) = \\tan\\left(\\frac{\\pi}{2} - x\\right)\\)",
+      "\\(\\sin(x) = \\cot(x)\\)",
+      "\\(\\sin(x) = \\tan(x)\\)"
+    ]
+  },
+  {
+    "id": "cofunction_identity_cosine_mc",
+    "front": "What is the cofunction identity for \\(\\cos(x)\\)?",
+    "options": [
+      "\\(\\cos(x) = \\sin\\left(\\frac{\\pi}{2} - x\\right)\\)",
+      "\\(\\cos(x) = \\tan\\left(\\frac{\\pi}{2} - x\\right)\\)",
+      "\\(\\cos(x) = \\cot(x)\\)",
+      "\\(\\cos(x) = \\tan(x)\\)"
+    ]
+  },
+  {
+    "id": "double_angle_cosine_1_mc",
+    "front": "What is one form of the double angle formula for \\(\\cos(2x)\\)?",
+    "options": [
       "\\(\\cos(2x) = \\cos^2 x - \\sin^2 x\\)",
+      "\\(\\cos(2x) = 2 \\cos^2 x - 1\\)",
+      "\\(\\cos(2x) = 1 - 2 \\sin^2 x\\)",
+      "\\(\\cos(2x) = \\cos x - \\sin x\\)"
+    ]
+  },
+  {
+    "id": "double_angle_cosine_2_mc",
+    "front": "What is an alternative form of the double angle formula for \\(\\cos(2x)\\)?",
+    "options": [
+      "\\(\\cos(2x) = 2 \\cos^2 x - 1\\)",
+      "\\(\\cos(2x) = \\cos^2 x - \\sin^2 x\\)",
+      "\\(\\cos(2x) = \\cos^2 x + \\sin^2 x\\)",
+      "\\(\\cos(2x) = 1 - 2 \\sin^2 x\\)"
+    ]
+  },
+  {
+    "id": "double_angle_cosine_3_mc",
+    "front": "What is another form of the double angle formula for \\(\\cos(2x)\\)?",
+    "options": [
+      "\\(\\cos(2x) = 1 - 2 \\sin^2 x\\)",
+      "\\(\\cos(2x) = \\cos^2 x - \\sin^2 x\\)",
+      "\\(\\cos(2x) = \\cos^2 x + \\sin^2 x\\)",
+      "\\(\\cos(2x) = 2 \\cos^2 x + 1\\)"
+    ]
+  },
+  {
+    "id": "double_angle_sine_mc",
+    "front": "What is the double angle formula for \\(\\sin(2x)\\)?",
+    "options": [
       "\\(\\sin(2x) = 2 \\sin x \\cos x\\)",
+      "\\(\\sin(2x) = \\sin^2 x + \\cos^2 x\\)",
+      "\\(\\sin(2x) = 2 \\sin x \\sin x\\)",
+      "\\(\\sin(2x) = 2 \\cos x \\cos x\\)"
+    ]
+  },
+  {
+    "id": "double_angle_tangent_mc",
+    "front": "What is the double angle formula for \\(\\tan(2x)\\)?",
+    "options": [
+      "\\(\\tan(2x) = \\frac{2 \\tan x}{1 - \\tan^2 x}\\)",
+      "\\(\\tan(2x) = \\frac{\\tan^2 x - 1}{2 \\tan x}\\)",
+      "\\(\\tan(2x) = \\frac{\\tan x}{2 - \\tan^2 x}\\)",
       "\\(\\tan(2x) = \\frac{2 \\tan x}{1 + \\tan^2 x}\\)"
     ]
   },
   {
-    "id": "tangent_sum_formula",
-    "front": "Which formula is used to simplify \\(\\tan(a + b)\\)?",
+    "id": "power_reducing_sine_mc",
+    "front": "What is the power-reducing formula for \\(\\sin^2 x\\)?",
     "options": [
-      "\\(\\tan(a + b) = \\frac{\\tan a + \\tan b}{1 - \\tan a \\tan b}\\)",
-      "\\(\\tan(a + b) = \\tan a + \\tan b\\)",
-      "\\(\\tan(a + b) = \\frac{\\tan a - \\tan b}{1 + \\tan a \\tan b}\\)",
-      "\\(\\tan(a + b) = \\frac{\\tan a + \\tan b}{1 + \\tan a \\tan b}\\)"
+      "\\(\\sin^2 x = \\frac{1 - \\cos(2x)}{2}\\)",
+      "\\(\\sin^2 x = \\frac{1 + \\cos(2x)}{2}\\)",
+      "\\(\\sin^2 x = \\cos(2x)\\)",
+      "\\(\\sin^2 x = 1 - \\cos(2x)\\)"
     ]
   },
   {
-    "id": "cosine_difference_example",
-    "front": "What is the result of using the difference formula for \\(\\cos(90^\\circ - 45^\\circ)\\)?",
+    "id": "power_reducing_cosine_mc",
+    "front": "What is the power-reducing formula for \\(\\cos^2 x\\)?",
     "options": [
-      "\\(\\frac{\\sqrt{2}}{2}\\)",
-      "\\(\\frac{\\sqrt{3}}{2}\\)",
-      "\\(\\frac{1}{2}\\)",
-      "\\(1\\)"
+      "\\(\\cos^2 x = \\frac{1 + \\cos(2x)}{2}\\)",
+      "\\(\\cos^2 x = \\frac{1 - \\cos(2x)}{2}\\)",
+      "\\(\\cos^2 x = \\sin(2x)\\)",
+      "\\(\\cos^2 x = 1 + \\cos(2x)\\)"
     ]
   },
   {
-    "id": "power_reducing_sin",
-    "front": "Which identity would simplify \\(\\sin^2 x\\) in terms of \\(\\cos(2x)\\)?",
-    "back": "\\(\\sin^2 x = \\frac{1 - \\cos(2x)}{2}\\)"
-  },
-  {
-    "id": "equivalent_cosine_options",
-    "front": "Which of the following expressions is equivalent to \\(\\cos(2x)\\)?",
+    "id": "power_reducing_tangent_mc",
+    "front": "What is the power-reducing formula for \\(\\tan^2 x\\)?",
     "options": [
-      "\\(2 \\cos^2 x - 1\\)",
-      "\\(\\cos^2 x - \\sin^2 x\\)",
-      "\\(1 - 2 \\sin^2 x\\)",
-      "All of the above"
+      "\\(\\tan^2 x = \\frac{1 - \\cos(2x)}{1 + \\cos(2x)}\\)",
+      "\\(\\tan^2 x = \\frac{1 + \\cos(2x)}{1 - \\cos(2x)}\\)",
+      "\\(\\tan^2 x = \\frac{1 - \\sin(2x)}{1 + \\sin(2x)}\\)",
+      "\\(\\tan^2 x = \\sin^2 x - \\cos^2 x\\)"
     ]
   },
   {
-    "id": "half_angle_sine",
-    "front": "Which formula is correct for \\(\\sin\\left(\\frac{x}{2}\\right)\\)?",
+    "id": "half_angle_sine_mc",
+    "front": "What is the half-angle formula for \\(\\sin\\left(\\frac{x}{2}\\right)\\)?",
     "options": [
       "\\(\\sin\\left(\\frac{x}{2}\\right) = \\pm \\sqrt{\\frac{1 - \\cos(x)}{2}}\\)",
       "\\(\\sin\\left(\\frac{x}{2}\\right) = \\pm \\sqrt{\\frac{1 + \\cos(x)}{2}}\\)",
       "\\(\\sin\\left(\\frac{x}{2}\\right) = \\frac{1 - \\cos(x)}{2}\\)",
-      "\\(\\sin\\left(\\frac{x}{2}\\right) = \\frac{1 + \\cos(x)}{2}\\)"
+      "\\(\\sin\\left(\\frac{x}{2}\\right) = \\cos(x)\\)"
     ]
   },
   {
-    "id": "cosine_power_reduction",
-    "front": "Which is the power-reducing formula for \\(\\cos^2 x\\)?",
-    "back": "\\(\\cos^2 x = \\frac{1 + \\cos(2x)}{2}\\)"
+    "id": "half_angle_cosine_mc",
+    "front": "What is the half-angle formula for \\(\\cos\\left(\\frac{x}{2}\\right)\\)?",
+    "options": [
+      "\\(\\cos\\left(\\frac{x}{2}\\right) = \\pm \\sqrt{\\frac{1 + \\cos(x)}{2}}\\)",
+      "\\(\\cos\\left(\\frac{x}{2}\\right) = \\pm \\sqrt{\\frac{1 - \\cos(x)}{2}}\\)",
+      "\\(\\cos\\left(\\frac{x}{2}\\right) = \\frac{1 + \\cos(x)}{2}\\)",
+      "\\(\\cos\\left(\\frac{x}{2}\\right) = \\frac{1 - \\cos(x)}{2}\\)"
+    ]
   },
   {
-    "id": "half_angle_tangent",
-    "front": "Which of the following is the correct half-angle formula for \\(\\tan\\left(\\frac{x}{2}\\right)\\)?",
+    "id": "half_angle_tangent_mc",
+    "front": "What is the half-angle formula for \\(\\tan\\left(\\frac{x}{2}\\right)\\)?",
     "options": [
       "\\(\\tan\\left(\\frac{x}{2}\\right) = \\pm \\sqrt{\\frac{1 - \\cos(x)}{1 + \\cos(x)}}\\)",
       "\\(\\tan\\left(\\frac{x}{2}\\right) = \\frac{1 - \\cos(x)}{1 + \\cos(x)}\\)",
@@ -100,23 +170,13 @@
     ]
   },
   {
-    "id": "verify_double_angle_sine",
-    "front": "Verify if \\(\\sin(2x) = 2 \\sin x \\cos x\\) is a correct double angle formula.",
-    "back": "Yes, \\(\\sin(2x) = 2 \\sin x \\cos x\\) is the double angle formula for sine."
-  },
-  {
-    "id": "cosine_sum_example",
-    "front": "What is \\(\\cos(30^\\circ + 60^\\circ)\\)?",
-    "options": ["0", "\\(\\frac{1}{2}\\)", "\\(-\\frac{1}{2}\\)", "1"]
-  },
-  {
-    "id": "sine_sum_usage",
-    "front": "Which formula would you use to simplify \\(\\sin(a + b)\\)?",
-    "back": "\\(\\sin(a + b) = \\sin a \\cos b + \\cos a \\sin b\\)"
-  },
-  {
-    "id": "summary_sum_diff_double",
-    "front": "Summarize the key sum, difference, and double angle formulas for sine and cosine.",
-    "back": "- **Sum and Difference for Cosine**: \\(\\cos(a + b) = \\cos a \\cos b - \\sin a \\sin b\\), \\(\\cos(a - b) = \\cos a \\cos b + \\sin a \\sin b\\) \\n- **Sum and Difference for Sine**: \\(\\sin(a + b) = \\sin a \\cos b + \\cos a \\sin b\\), \\(\\sin(a - b) = \\sin a \\cos b - \\cos a \\sin b\\) \\n- **Double Angle Formulas**: \\(\\cos(2x) = \\cos^2 x - \\sin^2 x = 2\\cos^2 x - 1 = 1 - 2\\sin^2 x\\), \\(\\sin(2x) = 2 \\sin x \\cos x\\)"
+    "id": "half_angle_sign_mc",
+    "front": "What determines the sign (\\(\\pm\\)) in the half-angle formulas?",
+    "options": [
+      "The quadrant of \\(\\frac{x}{2}\\)",
+      "The sign of \\(x\\)",
+      "The value of \\(\\cos(x)\\)",
+      "Whether \\(x\\) is positive or negative"
+    ]
   }
 ]
