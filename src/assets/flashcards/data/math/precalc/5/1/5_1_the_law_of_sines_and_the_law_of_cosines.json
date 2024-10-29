@@ -1,0 +1,207 @@
+[
+  {
+    "id": "suitable_law_for_aas_asa",
+    "front": "Which trigonometric law is suitable for solving AAS and ASA triangles?",
+    "options": [
+      "Law of Sines",
+      "Law of Cosines",
+      "Pythagorean Theorem",
+      "Law of Tangents"
+    ]
+  },
+  {
+    "id": "triangle_form_two_sides_included_angle",
+    "front": "What is the form of a triangle where two sides and the included angle are known?",
+    "options": ["SAS", "SSS", "ASA", "SSA"]
+  },
+  {
+    "id": "law_of_sines_applicable_triangles",
+    "front": "In which type of triangle would you use the Law of Sines to solve for missing sides?",
+    "options": ["ASA", "SSS", "SAS", "SSA (with two solutions)"]
+  },
+  {
+    "id": "law_applied_first_sas",
+    "front": "Which law is typically applied first when solving an SAS triangle?",
+    "options": [
+      "Law of Cosines",
+      "Law of Sines",
+      "Pythagorean Theorem",
+      "Sum of Angles"
+    ]
+  },
+  {
+    "id": "triangle_form_given_a_b_C",
+    "front": "Given \\( a = 8 \\), \\( b = 6 \\), and \\( C = 60^\\circ \\), which form does this triangle fit?",
+    "options": ["SAS", "SSS", "ASA", "SSA"]
+  },
+  {
+    "id": "law_of_cosines_formula_for_c",
+    "front": "Which formula is used in the Law of Cosines to solve for \\( c \\) when given two sides and the included angle?",
+    "back": "\\( c^2 = a^2 + b^2 - 2ab \\cos C \\)"
+  },
+  {
+    "id": "ssa_solution_if_a_less_than_h",
+    "front": "In an SSA triangle, if \\( a < h \\), what does this imply about the number of solutions?",
+    "options": [
+      "No solution",
+      "One solution",
+      "Two solutions",
+      "Infinite solutions"
+    ]
+  },
+  {
+    "id": "ssa_solution_if_a_equals_h",
+    "front": "For an SSA triangle, when \\( a = h \\), what is the solution outcome?",
+    "options": [
+      "One solution",
+      "No solution",
+      "Two solutions",
+      "Infinite solutions"
+    ]
+  },
+  {
+    "id": "law_for_sss_triangle",
+    "front": "When given three sides of a triangle (SSS), which law should be applied to find the angles?",
+    "options": [
+      "Law of Cosines",
+      "Law of Sines",
+      "Pythagorean Theorem",
+      "Law of Tangents"
+    ]
+  },
+  {
+    "id": "cosine_form_for_A_in_sss_triangle",
+    "front": "Which formula from the Law of Cosines would be used to find angle \\( A \\) in an SSS triangle?",
+    "back": "\\( \\cos A = \\frac{b^2 + c^2 - a^2}{2bc} \\)"
+  },
+  {
+    "id": "triangle_ambiguous_case",
+    "front": "Which triangle configuration leads to an ambiguous case?",
+    "options": ["SSA", "ASA", "AAS", "SAS"]
+  },
+  {
+    "id": "law_of_sines_applicable_configurations",
+    "front": "For which configurations is the Law of Sines applicable?",
+    "options": ["ASA, AAS, SSA", "SSS, SAS", "SAS, SSA", "SSS only"]
+  },
+  {
+    "id": "find_third_angle_in_aas",
+    "front": "For a triangle with \\( A = 45^\\circ \\), \\( B = 60^\\circ \\), and \\( a = 7 \\), what is the third angle, \\( C \\)?",
+    "options": ["105°", "45°", "75°", "90°"]
+  },
+  {
+    "id": "triangle_case_not_for_law_of_sines",
+    "front": "Which of the following cases would not use the Law of Sines?",
+    "options": ["SAS", "AAS", "ASA", "SSA"]
+  },
+  {
+    "id": "ssa_no_solution_if_a_less_than_h",
+    "front": "Given \\( a = 3 \\) and \\( b = 7 \\) with angle \\( A = 30^\\circ \\) in an SSA triangle, if \\( a < h \\), what is the solution status?",
+    "options": [
+      "No solution",
+      "One solution",
+      "Two solutions",
+      "Infinite solutions"
+    ]
+  },
+  {
+    "id": "cosine_formula_for_a",
+    "front": "Which of the following is the correct form of the Law of Cosines for finding \\( a \\) in a triangle?",
+    "options": [
+      "\\( a^2 = b^2 + c^2 - 2bc \\cos A \\)",
+      "\\( a^2 = b^2 - c^2 + 2bc \\cos A \\)",
+      "\\( a^2 = b^2 + c^2 + 2bc \\cos A \\)",
+      "\\( a^2 = b^2 + c^2 - 2bc \\sin A \\)"
+    ]
+  },
+  {
+    "id": "cosine_formula_for_b",
+    "front": "What is the correct form of the Law of Cosines for finding \\( b \\)?",
+    "back": "\\( b^2 = a^2 + c^2 - 2ac \\cos B \\)"
+  },
+  {
+    "id": "cosine_formula_for_C",
+    "front": "When using the Law of Cosines to find an angle, which of the following is the correct setup for angle \\( C \\)?",
+    "options": [
+      "\\( \\cos C = \\frac{a^2 + b^2 - c^2}{2ab} \\)",
+      "\\( \\cos C = \\frac{a^2 + b^2 + c^2}{2ab} \\)",
+      "\\( \\cos C = \\frac{c^2 - a^2 - b^2}{2ab} \\)",
+      "\\( \\cos C = \\frac{a^2 - b^2 + c^2}{2bc} \\)"
+    ]
+  },
+  {
+    "id": "known_all_three_sides_which_law",
+    "front": "You know the values of all three sides \\( a \\), \\( b \\), and \\( c \\) in a triangle. Which law should you use to find an angle?",
+    "options": [
+      "Law of Cosines",
+      "Law of Sines",
+      "Pythagorean Theorem",
+      "None; not enough information"
+    ]
+  },
+  {
+    "id": "triangle_form_given_a_b_A",
+    "front": "Given \\( a = 4 \\), \\( b = 5 \\), and \\( A = 60^\\circ \\), what type of triangle configuration is this?",
+    "options": ["SAS", "SSS", "ASA", "SSA"]
+  },
+  {
+    "id": "solve_given_two_sides_non_included_angle",
+    "front": "You know two sides and a non-included angle in a triangle. Which law is best suited to start solving?",
+    "options": [
+      "Law of Sines",
+      "Law of Cosines",
+      "Pythagorean Theorem",
+      "Angle Sum Property"
+    ]
+  },
+  {
+    "id": "when_to_use_cosine_instead_of_sines",
+    "front": "When should you apply the Law of Cosines instead of the Law of Sines?",
+    "options": [
+      "When you know two sides and the included angle or all three sides",
+      "When the triangle is right-angled",
+      "When you know two angles and a side",
+      "When you know one side and two non-included angles"
+    ]
+  },
+  {
+    "id": "law_of_cosines_formula_for_c",
+    "front": "What is the correct Law of Cosines formula for finding \\( c \\)?",
+    "options": [
+      "\\( c^2 = a^2 + b^2 - 2ab \\cos C \\)",
+      "\\( c^2 = a^2 - b^2 + 2ab \\cos C \\)",
+      "\\( c^2 = a^2 + b^2 + 2ab \\sin C \\)",
+      "\\( c^2 = a^2 - b^2 - 2ab \\cos C \\)"
+    ]
+  },
+  {
+    "id": "law_used_for_given_triangle",
+    "front": "Given the triangle with \\( a = 7 \\), \\( b = 9 \\), and \\( c = 11 \\), which law would you use to solve for angle \\( A \\)?",
+    "options": [
+      "Law of Cosines",
+      "Law of Sines",
+      "Pythagorean Theorem",
+      "None of the above"
+    ]
+  },
+  {
+    "id": "cosine_formula_usage_case",
+    "front": "In which case is the following formula used: \\( a^2 = b^2 + c^2 - 2bc \\cos A \\)?",
+    "options": ["SAS", "SSA", "SSS", "ASA"]
+  },
+  {
+    "id": "law_of_cosines_find_angle_B",
+    "front": "If \\( a = 5 \\), \\( b = 12 \\), and \\( c = 13 \\), which form of the Law of Cosines would allow you to find angle \\( B \\)?",
+    "back": "\\( \\cos B = \\frac{a^2 + c^2 - b^2}{2ac} \\)"
+  },
+  {
+    "id": "law_solve_triangle_given_A_B_a",
+    "front": "You have \\( A = 40^\\circ \\), \\( B = 60^\\circ \\), and side \\( a = 10 \\). Which trigonometric law can solve this triangle?",
+    "options": ["Law of Sines", "Law of Cosines", "Both", "Neither"]
+  },
+  {
+    "id": "triangle_type_given_sides",
+    "front": "Given triangle sides \\( a = 6 \\), \\( b = 8 \\), and \\( c = 10 \\), what is the type of triangle configuration?",
+    "options": ["SSS", "SAS", "ASA", "SSA"]
+  }
+]
