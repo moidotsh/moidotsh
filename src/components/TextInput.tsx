@@ -1,55 +1,54 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from "react";
 
 type TextInputProps = {
-  changeLine: (count: number) => void;
-  initialValue: string;
   handleCommandExecution: (commandInput: string) => void;
+  initialValue: string;
   afterEnter?: () => void;
 };
 
 const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
-  ({ changeLine, initialValue, handleCommandExecution, afterEnter }, ref) => {
+  ({ handleCommandExecution, initialValue, afterEnter }, ref) => {
+    const [value, setValue] = useState(initialValue);
     const [width, setWidth] = useState(0);
-    const [count, setCount] = useState(0);
 
     const changeHandler = (evt: ChangeEvent<HTMLInputElement>) => {
+      setValue(evt.target.value);
       setWidth(evt.target.value.length);
     };
 
     const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
-        handleCommandExecution(e.currentTarget.value); // Use the router prop directly
-        setCount((prevCount) => prevCount + 1);
-        changeLine(count);
+        handleCommandExecution(value);
+        setValue("");
+        setWidth(0);
         if (afterEnter) {
           afterEnter();
         }
       }
     };
 
-
-
+    React.useEffect(() => {
+      setValue(initialValue);
+      setWidth(initialValue.length);
+    }, [initialValue]);
 
     return (
-      <div className={`s${count}`}>
-        <input
-          ref={ref}
-          type="text"
-          style={{ width: `${width}ch` }}
-          autoFocus
-          onChange={changeHandler}
-          id="console"
-          spellCheck="false"
-          autoComplete="off"
-          name="hidden"
-          onKeyPress={handleKeyPress}
-          className="bg-transparent border-none outline-none caret-transparent font-fira-code"
-        />
-      </div>
+      <input
+        ref={ref}
+        type="text"
+        value={value}
+        style={{ width: `${Math.max(width, 1)}ch` }}
+        autoFocus
+        onChange={changeHandler}
+        onKeyPress={handleKeyPress}
+        className="bg-transparent border-none outline-none caret-transparent font-fira-code"
+        spellCheck="false"
+        autoComplete="off"
+      />
     );
-  });
+  },
+);
 
 TextInput.displayName = "TextInput";
 
 export default TextInput;
-
