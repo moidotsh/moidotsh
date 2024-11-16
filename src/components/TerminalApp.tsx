@@ -5,6 +5,7 @@ import BlinkingCaret from "./BlinkingCaret";
 import * as commands from "../utils/commands";
 import { useRouter } from "next/router";
 import withAppTemplate from "./withAppTemplate";
+import { VimEditor } from "./VimEditor";
 
 type TerminalAppProps = {
   setDynamicTitle?: (title: string | JSX.Element) => void;
@@ -23,6 +24,10 @@ const TerminalApp: React.FC<TerminalAppProps> = ({ setDynamicTitle }) => {
   ]);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [vimEditorProps, setVimEditorProps] = useState<{
+    filePath: string;
+    initialContent: string;
+  } | null>(null);
 
   const router = useRouter();
 
@@ -56,27 +61,55 @@ const TerminalApp: React.FC<TerminalAppProps> = ({ setDynamicTitle }) => {
       return;
     }
 
-    // Update command history
     setCommandHistory((prev) => [...prev, commandInput]);
     setHistoryIndex(-1);
 
-    // Execute command and get output
     const [command, ...args] = commandInput.split(" ");
     const commandHandler = commands[command as keyof typeof commands];
-    let output: string | undefined;
 
     if (commandHandler) {
-      output = commandHandler(args, router) as string;
-    } else {
-      output = `Command not found: ${command}`;
-    }
+      const output = commandHandler(args, router);
 
-    // Update lines with executed command and new prompt
-    setLines((prev) => [
-      ...prev.slice(0, -1),
-      { command: commandInput, output, isActive: false },
-      { command: "", isActive: true },
-    ]);
+      // Check if output is a vim editor command
+      if (typeof output === "string" && output.includes("<vim-editor")) {
+        // Parse path and content from vim command output
+        const pathMatch = output.match(/path="([^"]*?)"/);
+        const contentMatch = output.match(/content="([^"]*?)"/);
+
+        if (pathMatch) {
+          // Set vim editor props which will trigger editor view
+          setVimEditorProps({
+            filePath: pathMatch[1],
+            initialContent: contentMatch?.[1] || "",
+          });
+
+          // Add command to history without the vim-editor tags
+          setLines((prev) => [
+            ...prev.slice(0, -1),
+            { command: commandInput, output: undefined, isActive: false },
+            { command: "", isActive: true },
+          ]);
+          return;
+        }
+      }
+
+      // Normal command output handling
+      setLines((prev) => [
+        ...prev.slice(0, -1),
+        { command: commandInput, output: output as string, isActive: false },
+        { command: "", isActive: true },
+      ]);
+    } else {
+      setLines((prev) => [
+        ...prev.slice(0, -1),
+        {
+          command: commandInput,
+          output: `Command not found: ${command}`,
+          isActive: false,
+        },
+        { command: "", isActive: true },
+      ]);
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -164,46 +197,60 @@ const TerminalApp: React.FC<TerminalAppProps> = ({ setDynamicTitle }) => {
       className="w-full h-full overflow-y-auto font-mono text-sm"
       onKeyDown={handleKeyDown}
     >
-      {lines.map((line, index) => (
-        <div key={index} className="leading-tight">
-          <div className="flex items-center">
-            <span className="font-fira-code pr-2">$</span>
-            {line.isActive ? (
-              <TextInput
-                handleCommandExecution={handleCommandExecution}
-                ref={inputRef}
-                initialValue={line.command}
-              />
-            ) : (
-              <span>{line.command}</span>
-            )}
-            {line.isActive && <BlinkingCaret />}
-          </div>
-          {line.output && (
-            <div className="pl-4 font-mono">
-              {line.output.includes("<span") ? (
-                <div
-                  dangerouslySetInnerHTML={{ __html: line.output }}
-                  className="flex flex-wrap gap-2 whitespace-pre-wrap break-words"
+      {vimEditorProps ? (
+        <VimEditor
+          filePath={vimEditorProps.filePath}
+          initialContent={vimEditorProps.initialContent}
+          onExit={() => setVimEditorProps(null)}
+        />
+      ) : (
+        lines.map((line, index) => (
+          <div key={index} className="leading-tight">
+            <div className="flex items-center">
+              <span className="font-fira-code pr-2">$</span>
+              {line.isActive ? (
+                <TextInput
+                  handleCommandExecution={handleCommandExecution}
+                  ref={inputRef}
+                  initialValue={line.command}
                 />
               ) : (
-                <div className="whitespace-pre-wrap break-words">
-                  {line.output}
-                </div>
+                <span>{line.command}</span>
               )}
+              {line.isActive && <BlinkingCaret />}
             </div>
-          )}
-        </div>
-      ))}
+            {line.output && (
+              <div className="pl-4 font-mono">
+                {line.output.includes("<span") ? (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: line.output }}
+                    className="flex flex-wrap gap-2 whitespace-pre-wrap break-words"
+                  />
+                ) : (
+                  <div className="whitespace-pre-wrap break-words">
+                    {line.output}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))
+      )}
     </div>
   );
 };
 
-export default withAppTemplate(TerminalApp, "Terminal", (router) => (
-  <>
-    <span className="sm:inline hidden">st ~</span>
-    <span className="sm:hidden inline">
-      <LeftText path={router.pathname} />
-    </span>
-  </>
-));
+const WrappedTerminalApp = withAppTemplate(
+  TerminalApp,
+  "Terminal",
+  (router) => (
+    <>
+      <span className="sm:inline hidden">st ~</span>
+      <span className="sm:hidden inline">
+        <LeftText path={router.pathname} />
+      </span>
+    </>
+  ),
+);
+
+export default WrappedTerminalApp;
