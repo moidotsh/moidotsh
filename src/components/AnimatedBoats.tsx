@@ -1,70 +1,71 @@
-import React, { useState, useEffect } from "react";
-
-interface Boat {
-  id: number;
-  position: number;
-  speed: number;
-  direction: "left" | "right";
-  size: number;
-  yOffset: number;
-}
+import React, { useEffect, useState } from "react";
+import { useDynamicSceneryStore } from "@/stores/dynamicSceneryStore";
 
 const AnimatedBoats = () => {
-  const [boats, setBoats] = useState<Boat[]>([]);
+  const { boats, setBoats, updatePositions, isInitialized, setInitialized } =
+    useDynamicSceneryStore();
+  const [isMounted, setIsMounted] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(1000);
 
   useEffect(() => {
-    const initialBoats: Boat[] = [
-      createBoat(1, "right", 42), // Adjusted to middle lake section
-      createBoat(2, "left", 44),
-      createBoat(3, "right", 43),
-    ];
-    setBoats(initialBoats);
+    setIsMounted(true);
+    setScreenWidth(window.innerWidth);
+
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  function createBoat(
-    id: number,
-    direction: "left" | "right",
-    yOffset: number,
-  ): Boat {
-    return {
-      id,
-      position: direction === "right" ? -100 : window.innerWidth + 100,
-      speed: 0.05 + Math.random() * 0.1,
-      direction,
-      size: 20 + Math.random() * 10,
-      yOffset: yOffset + (Math.random() * 2 - 1), // Small vertical variation
-    };
-  }
+  useEffect(() => {
+    if (!isInitialized && isMounted) {
+      const centerPosition = screenWidth / 2 - 20;
+
+      const initialBoats = [
+        {
+          id: 1,
+          position: centerPosition,
+          speed: 0.002, // Increased by ~250x
+          direction: "right" as const,
+          size: 20 + Math.random() * 10,
+          yOffset: 43,
+        },
+        {
+          id: 2,
+          position: -100,
+          speed: 0.009, // Slightly different speeds for variety
+          direction: "right" as const,
+          size: 20 + Math.random() * 10,
+          yOffset: 42,
+        },
+        {
+          id: 3,
+          position: screenWidth + 100,
+          speed: 0.002,
+          direction: "left" as const,
+          size: 20 + Math.random() * 10,
+          yOffset: 44,
+        },
+      ];
+
+      setBoats(initialBoats);
+      setInitialized(true);
+    }
+  }, [screenWidth, isInitialized, setBoats, setInitialized, isMounted]);
 
   useEffect(() => {
+    if (!isInitialized || !isMounted) return;
+
     let animationFrame: number;
-
     const animate = () => {
-      setBoats((prevBoats) =>
-        prevBoats.map((boat) => {
-          let newPosition =
-            boat.position +
-            (boat.direction === "right" ? boat.speed : -boat.speed);
-
-          if (
-            boat.direction === "right" &&
-            newPosition > window.innerWidth + 100
-          ) {
-            return createBoat(boat.id, "right", boat.yOffset);
-          } else if (boat.direction === "left" && newPosition < -100) {
-            return createBoat(boat.id, "left", boat.yOffset);
-          }
-
-          return { ...boat, position: newPosition };
-        }),
-      );
-
+      updatePositions(screenWidth);
       animationFrame = requestAnimationFrame(animate);
     };
 
     animationFrame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrame);
-  }, []);
+  }, [updatePositions, screenWidth, isInitialized, isMounted]);
+
+  if (!isMounted) return null;
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden">
@@ -88,7 +89,6 @@ const AnimatedBoats = () => {
               transform: boat.direction === "left" ? "scaleX(-1)" : "none",
             }}
           >
-            {/* Original boat silhouette */}
             <path
               d="M10,20 L30,20 L25,25 L15,25 Z"
               fill="#2D3748"

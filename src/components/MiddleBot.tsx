@@ -2,8 +2,7 @@ import React from "react";
 import MountainReflection from "./MountainReflection";
 import { useSceneryStore } from "@/stores/sceneryStore";
 import { theme } from "@/styles/themes";
-import AnimatedBoats from "./AnimatedBoats";
-
+import { AnimatedBoats, AnimatedClouds } from "@/components/DynamicScenery";
 type Props = {};
 
 function MiddleBot({}: Props) {
