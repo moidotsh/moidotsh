@@ -85,7 +85,7 @@ const AnimatedBoats = () => {
             transform: `translateX(${boat.position}px)`,
             top: `${boat.yOffset}%`,
             willChange: "transform",
-            zIndex: 50, // Make sure boats are clickable
+            zIndex: 99, // Make sure boats are clickable
           }}
           onClick={handleBoatClick}
         >
