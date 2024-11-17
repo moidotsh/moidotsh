@@ -2,6 +2,7 @@ import React from "react";
 import MountainReflection from "./MountainReflection";
 import { useSceneryStore } from "@/stores/sceneryStore";
 import { theme } from "@/styles/themes";
+import AnimatedBoats from "./AnimatedBoats";
 
 type Props = {};
 
@@ -27,6 +28,10 @@ function MiddleBot({}: Props) {
         </div>
         <div className="col-start-8 col-span-3 row-start-1 opacity-25 w-4/12 scale-x-[600%] ml-96 ">
           <MountainReflection details={bottomRightMountainDetails} />
+        </div>
+
+        <div className="absolute inset-0">
+          <AnimatedBoats />
         </div>
       </div>
     </>
