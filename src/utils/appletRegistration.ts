@@ -7,6 +7,7 @@ import {
   BookOpen,
   Heart,
   Globe,
+  MessageCircle,
 } from "react-feather";
 import { registerApplet } from "./appletUtils";
 import TerminalApp from "@/components/TerminalApp";
@@ -15,6 +16,7 @@ import NavApp from "@/components/NavApp";
 import FlashCardApp from "@/components/FlashCard/FlashCardApp";
 import { useProgressStore } from "@/stores/flashcard";
 import BrowserApp from "@/components/BrowserApp";
+import BoatChat from "@/components/BoatChat";
 
 // Register existing applets with their internal and display names
 // appletRegistration.ts
@@ -46,6 +48,14 @@ registerApplet({
   displayName: "Terminal",
   getIcon: () => React.createElement(Terminal),
   component: TerminalApp,
+});
+
+registerApplet({
+  name: "Chat",
+  displayName: "Chat",
+  getIcon: () => React.createElement(MessageCircle),
+  component: BoatChat,
+  fullSize: true,
 });
 
 const getFlashcardTitle = () => {

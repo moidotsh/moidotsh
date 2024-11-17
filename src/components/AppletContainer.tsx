@@ -10,6 +10,7 @@ const AppletContainer = () => {
     musicVisible: state.musicVisible,
     browserVisible: state.browserVisible,
     flashcardsVisible: state.flashcardsVisible,
+    chatVisible: state.chatVisible,
   }));
 
   console.log("AppletContainer render - visibility states:", visibilityStates);

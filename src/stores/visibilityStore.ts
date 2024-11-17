@@ -5,7 +5,8 @@ export type AppletName =
   | "Terminal"
   | "Music"
   | "Browser"
-  | "Flashcards";
+  | "Flashcards"
+  | "Chat";
 
 export type VisibilityState = {
   explorerVisible: boolean;
@@ -13,6 +14,7 @@ export type VisibilityState = {
   musicVisible: boolean;
   browserVisible: boolean;
   flashcardsVisible: boolean;
+  chatVisible: boolean;
 
   browserTitle: string;
   browserContent: JSX.Element | null;
@@ -24,6 +26,7 @@ export type VisibilityState = {
   toggleMusic: () => void;
   toggleBrowser: () => void;
   toggleFlashcards: () => void;
+  toggleChat: () => void;
 
   setBrowserContent: (content: JSX.Element | null) => void;
   setBrowserTitle: (title: string) => void;
@@ -39,6 +42,7 @@ export const useVisibilityStore = create<VisibilityState>((set) => ({
   musicVisible: false,
   browserVisible: false,
   flashcardsVisible: false,
+  chatVisible: false,
 
   // Browser state
   browserTitle: "Browser",
@@ -55,6 +59,7 @@ export const useVisibilityStore = create<VisibilityState>((set) => ({
     set((state) => ({ browserVisible: !state.browserVisible })),
   toggleFlashcards: () =>
     set((state) => ({ flashcardsVisible: !state.flashcardsVisible })),
+  toggleChat: () => set((state) => ({ chatVisible: !state.chatVisible })),
 
   // Browser functions
   setBrowserContent: (content) => set({ browserContent: content }),
