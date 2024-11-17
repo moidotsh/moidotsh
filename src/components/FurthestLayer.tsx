@@ -4,7 +4,7 @@ import Background from "./Background";
 import MountainContainer from "./MountainContainer";
 import Sun from "./Sun";
 import { useSceneryStore } from "@/stores/sceneryStore";
-import AnimatedClouds from "./AnimatedClouds";
+import { AnimatedBoats, AnimatedClouds } from "@/components/DynamicScenery";
 
 type Props = {};
 

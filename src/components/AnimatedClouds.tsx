@@ -1,68 +1,78 @@
-import React, { useState, useEffect } from "react";
-
-interface Cloud {
-  id: number;
-  position: number;
-  speed: number;
-  size: number;
-  yOffset: number;
-}
+import React, { useEffect, useState } from "react";
+import { useDynamicSceneryStore } from "@/stores/dynamicSceneryStore";
+import { generateCloudLayers } from "@/utils/cloudUtils";
 
 const AnimatedClouds = () => {
-  const [clouds, setClouds] = useState<Cloud[]>([]);
+  const { clouds, setClouds, updatePositions, isInitialized, setInitialized } =
+    useDynamicSceneryStore();
+  const [isMounted, setIsMounted] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(1000);
 
   useEffect(() => {
-    const screenWidth =
-      typeof window !== "undefined" ? window.innerWidth : 1000;
-    const initialClouds: Cloud[] = [
-      createCloud(1, 3, screenWidth + 100),
-      createCloud(2, 8, screenWidth * 0.7),
-      createCloud(3, 5, screenWidth * 0.3),
-      createCloud(4, 6, -200),
-    ];
-    setClouds(initialClouds);
+    setIsMounted(true);
+    setScreenWidth(window.innerWidth);
+
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  function createCloud(id: number, yOffset: number, initialX: number): Cloud {
-    return {
-      id,
-      position: initialX,
-      speed: 0.2 + Math.random() * 0.1, // Slower, gentler movement
-      size: 250 + Math.random() * 100, // Large but not overwhelming
-      yOffset: yOffset + Math.random() * 3,
-    };
-  }
+  useEffect(() => {
+    if (!isInitialized && isMounted) {
+      const initialClouds = [
+        {
+          id: 1,
+          position: screenWidth + 100,
+          speed: 0.02,
+          size: 250 + Math.random() * 100,
+          yOffset: 3 + Math.random() * 3,
+          layers: generateCloudLayers(), // Using imported function
+        },
+        {
+          id: 2,
+          position: screenWidth * 0.7,
+          speed: 0.015,
+          size: 250 + Math.random() * 100,
+          yOffset: 8 + Math.random() * 3,
+          layers: generateCloudLayers(),
+        },
+        {
+          id: 3,
+          position: screenWidth * 0.3,
+          speed: 0.025,
+          size: 250 + Math.random() * 100,
+          yOffset: 5 + Math.random() * 3,
+          layers: generateCloudLayers(),
+        },
+        {
+          id: 4,
+          position: -200,
+          speed: 0.018,
+          size: 250 + Math.random() * 100,
+          yOffset: 6 + Math.random() * 3,
+          layers: generateCloudLayers(),
+        },
+      ];
+
+      setClouds(initialClouds);
+      setInitialized(true);
+    }
+  }, [screenWidth, isInitialized, setClouds, setInitialized, isMounted]);
 
   useEffect(() => {
+    if (!isInitialized || !isMounted) return;
+
     let animationFrame: number;
-    const screenWidth =
-      typeof window !== "undefined" ? window.innerWidth : 1000;
-
     const animate = () => {
-      setClouds((prevClouds) => {
-        return prevClouds.map((cloud) => {
-          let newPosition = cloud.position - cloud.speed;
-
-          if (newPosition < -300) {
-            return {
-              ...cloud,
-              position: screenWidth + 100,
-              speed: 0.2 + Math.random() * 0.1,
-              size: 250 + Math.random() * 100,
-              yOffset: Math.random() * 8 + 2,
-            };
-          }
-
-          return { ...cloud, position: newPosition };
-        });
-      });
-
+      updatePositions(screenWidth);
       animationFrame = requestAnimationFrame(animate);
     };
 
     animationFrame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrame);
-  }, []);
+  }, [updatePositions, screenWidth, isInitialized, isMounted]);
+
+  if (!isMounted) return null;
 
   return (
     <div
@@ -85,22 +95,18 @@ const AnimatedClouds = () => {
             viewBox="0 0 100 50"
             style={{ overflow: "visible" }}
           >
-            {/* Simple, soft cloud shape */}
-            <path
-              d="
-                M 20 40
-                Q 0 40 0 25
-                Q 0 10 20 15
-                Q 30 0 50 5
-                Q 65 0 80 10
-                Q 100 10 100 25
-                Q 100 40 80 40
-                Q 65 45 50 40
-                Q 35 45 20 40
-              "
-              fill="white"
-              fillOpacity="0.25"
-            />
+            {cloud.layers.map((layer, index) => (
+              <path
+                key={index}
+                d={layer.path}
+                fill="white"
+                fillOpacity={layer.opacity}
+                transform={layer.transform}
+                style={{
+                  filter: "blur(1px)",
+                }}
+              />
+            ))}
           </svg>
         </div>
       ))}

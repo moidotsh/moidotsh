@@ -2,8 +2,7 @@
 
 import React, { ReactNode } from "react";
 import { theme } from "@/styles/themes";
-import AnimatedClouds from "./AnimatedClouds";
-
+import { AnimatedBoats, AnimatedClouds } from "@/components/DynamicScenery";
 type BackgroundProps = {
   children: ReactNode;
 };
