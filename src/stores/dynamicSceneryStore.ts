@@ -1,4 +1,3 @@
-// src/stores/dynamicSceneryStore.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { generateCloudLayers } from "@/utils/cloudUtils";
@@ -29,7 +28,7 @@ interface DynamicSceneryState {
   updatePositions: (screenWidth: number) => void;
 }
 
-const validateCloud = (cloud: any): cloud is Cloud => {
+const validateCloud = (cloud: Partial<Cloud>): cloud is Cloud => {
   return (
     cloud &&
     Array.isArray(cloud.layers) &&
@@ -48,44 +47,50 @@ export const useDynamicSceneryStore = create<DynamicSceneryState>()(
       lastUpdateTimestamp: Date.now(),
       isInitialized: false,
 
-      setClouds: (clouds) => {
-        // Validate clouds before setting
-        const validClouds = clouds.map((cloud) =>
-          validateCloud(cloud)
-            ? cloud
-            : {
-                ...cloud,
-                layers: generateCloudLayers(),
-              },
-        );
-        set({ clouds: validClouds });
+      setClouds: (clouds: Cloud[]) => {
+        const validClouds = clouds.map((cloud: Partial<Cloud>) => {
+          if (validateCloud(cloud)) return cloud;
+          return {
+            id: cloud.id || 0,
+            position: cloud.position || 0,
+            speed: cloud.speed || 0,
+            size: cloud.size || 0,
+            yOffset: cloud.yOffset || 0,
+            layers: generateCloudLayers(),
+          };
+        });
+        set({ clouds: validClouds as Cloud[] });
       },
 
       setBoats: (boats) => set({ boats }),
       setInitialized: (value) => set({ isInitialized: value }),
 
-      updatePositions: (screenWidth) => {
+      updatePositions: (screenWidth: number) => {
         const currentTime = Date.now();
         const timeDelta = currentTime - get().lastUpdateTimestamp;
 
-        const clouds = get().clouds.map((cloud) => {
-          // Validate each cloud's layers
-          if (!validateCloud(cloud)) {
-            cloud.layers = generateCloudLayers();
-          }
+        const clouds = get().clouds.map((cloud: Cloud) => {
+          // Create a new cloud object instead of modifying the existing one
+          const currentCloud: Cloud = {
+            ...cloud,
+            layers: validateCloud(cloud) ? cloud.layers : generateCloudLayers(),
+          };
 
-          let newPosition = cloud.position - cloud.speed * timeDelta;
-          let newLayers = cloud.layers;
+          let newPosition =
+            currentCloud.position - currentCloud.speed * timeDelta;
 
-          if (newPosition < -cloud.size) {
+          if (newPosition < -currentCloud.size) {
             newPosition = screenWidth + 100;
-            newLayers = generateCloudLayers();
+            return {
+              ...currentCloud,
+              position: newPosition,
+              layers: generateCloudLayers(),
+            };
           }
 
           return {
-            ...cloud,
+            ...currentCloud,
             position: newPosition,
-            layers: newLayers,
           };
         });
 
@@ -116,24 +121,26 @@ export const useDynamicSceneryStore = create<DynamicSceneryState>()(
     }),
     {
       name: "dynamic-scenery-storage",
-      version: 1, // Add version number to handle storage migrations
+      version: 1,
       merge: (persistedState: any, currentState) => {
-        // Validate persisted clouds
         const validatedClouds =
-          persistedState.clouds?.map((cloud: any) =>
-            validateCloud(cloud)
-              ? cloud
-              : {
-                  ...cloud,
-                  layers: generateCloudLayers(),
-                },
-          ) || [];
+          persistedState.clouds?.map((cloud: Partial<Cloud>) => {
+            if (validateCloud(cloud)) return cloud;
+            return {
+              id: cloud.id || 0,
+              position: cloud.position || 0,
+              speed: cloud.speed || 0,
+              size: cloud.size || 0,
+              yOffset: cloud.yOffset || 0,
+              layers: generateCloudLayers(),
+            };
+          }) || [];
 
         return {
           ...currentState,
           ...persistedState,
           clouds: validatedClouds,
-          isInitialized: false, // Force reinitialization
+          isInitialized: false,
         };
       },
     },
