@@ -31,7 +31,7 @@ registerApplet({
 
 registerApplet({
   name: "Explorer",
-  displayName: "Explorer",
+  displayName: "Files",
   getIcon: () => React.createElement(Briefcase),
   component: NavApp,
 });
@@ -45,7 +45,7 @@ registerApplet({
 
 registerApplet({
   name: "Terminal",
-  displayName: "Terminal",
+  displayName: "Shell",
   getIcon: () => React.createElement(Terminal),
   component: TerminalApp,
 });
