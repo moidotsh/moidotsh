@@ -56,6 +56,7 @@ registerApplet({
   getIcon: () => React.createElement(MessageCircle),
   component: BoatChat,
   fullSize: true,
+  showInDock: false, // This will hide it from the dock
 });
 
 const getFlashcardTitle = () => {
