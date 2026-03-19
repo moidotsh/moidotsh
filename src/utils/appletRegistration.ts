@@ -93,4 +93,5 @@ registerApplet({
   component: FlashCardApp,
   getDynamicTitle: getFlashcardTitle,
   fullSize: true,
+  showInDock: false, // Disabled - hide from dock
 });
